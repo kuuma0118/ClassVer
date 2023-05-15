@@ -1,20 +1,17 @@
-#include "DIrectX.h"
+#include "WinApp.h"
 
-// コンソール画面隠蔽
-#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
+const char kWindowTitle[] = "CG2_DirectX";
 
-int main(int argc, char* argv[])
-{
-	// 基本ウィンドウクラス登録
-	CSWindowClass::RegistBasicWindowClass();
-	// 基本ウィンドウ作成
-	CSWindowClass Window;
-	Window.CreateWnd(_T("タイトル"));
-	// メッセージループ
-	CSWindowClass::MsgLoop();
+//Windowsアプリでのエントリーポイント
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	return 0;
+    //初期化
+    WinApp::CreateWindowView();
+
+    //ウィンドウのxが押されるまでループ
+    while (WinApp::ProccessMessage() == 0) {
+    }
+
+
+    return 0;
 }
-
-
-
