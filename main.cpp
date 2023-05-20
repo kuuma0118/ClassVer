@@ -1,21 +1,26 @@
-#include "WinApp.h"
-#include "Common.h"
+#include "Engine.h"
+#include "Sys.h"
 
-const char kWindowTitle[] = "CG2_DirectXClass";
-
-//Windowsアプリでのエントリーポイント
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+	WinApp* win_ = nullptr;
+	CreateEngine* Engine = new CreateEngine;
+	Engine->Initialize(win_, 1280, 720);
 
-	//初期化
-	WinApp::CreateWindowView();
-	DirectXCommon::DirectXInitialize();
+	Engine->variableInitialize();
 
-	//ウィンドウのxが押されるまでループ
-	while (WinApp::ProccessMessage() == 0) {
+	while (true) {
+		if (win_->ProcessMessage()) {
+			break;
+		}
 
+		Engine->BeginFrame();
+		Engine->Update();
+
+		Engine->Draw();
+
+		Engine->EndFrame();
 	}
 
-	DirectXCommon::Release();
-
+	Engine->Finalize();
 	return 0;
 }

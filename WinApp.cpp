@@ -1,62 +1,52 @@
 #include "WinApp.h"
+#include <string>
 
-//ウィンドウプロシージャ
 LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-	//メッセージに応じてゲーム固有の処理を行う
 	switch (msg) {
-		//ウィンドウが破棄された
 	case WM_DESTROY:
-		// OSに対して、アプリの終了を伝える
 		PostQuitMessage(0);
 		return 0;
 	}
-	// 標準のメッセージ処理を行う
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-void WinApp::CreateWindowView() {
-	//ウィンドウプロシージャ
-	wc.lpfnWndProc = WindowProc;
-	//クラス名
-	wc.lpszClassName = L"CG2WindowClass";
-	//インスタンスハンドル
-	wc.hInstance = GetModuleHandle(nullptr);
-	//カーソル
-	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+void WinApp::CreateGameWindow(const wchar_t* title, int32_t clientWidth, int32_t clientHeight) {
+	wc_.lpfnWndProc = WindowProc;
+	wc_.lpszClassName = L"CG2DirectXClass";
+	wc_.hInstance = GetModuleHandle(nullptr);
+	wc_.hCursor = LoadCursor(nullptr, IDC_ARROW);
 
-	//ウィンドウクラス登録
-	RegisterClass(&wc);
+	RegisterClass(&wc_);
 
-	//ウィンドウサイズの構造体にクライアント領域を入れる
-	RECT wrc = { 0,0,kClientWidth,kClientHeight };
-
-	//クライアント領域を元に実際のサイズにwrcを変更してもらう
-	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
-
-	//ウィンドウの生成
+	AdjustWindowRect(&wrc_, WS_OVERLAPPEDWINDOW, false);
 	hwnd_ = CreateWindow(
-		wc.lpszClassName,//クラス名
-		L"CG2_DirectXClass",//タイトルバーの名前
-		WS_OVERLAPPEDWINDOW,//ウィンドウスタイル
-		CW_USEDEFAULT,//表示X座標
-		CW_USEDEFAULT,//表示Y座標
-		wrc.right - wrc.left,//ウィンドウ横幅
-		wrc.bottom - wrc.top,//ウィンドウ縦幅
-		nullptr,//親ウィンドウハンドル
-		nullptr,//メニューハンドル
-		wc.hInstance,//インスタンスハンドル
-		nullptr//オプション
-	);
+		wc_.lpszClassName,
+		title,
+		WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		wrc_.right - wrc_.left,
+		wrc_.bottom - wrc_.top,
+		nullptr,
+		nullptr,
+		wc_.hInstance,
+		nullptr);
 
-	//ウィンドウ表示
+#ifdef _DEBUG
+	debugController_ = nullptr;
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_)))) {
+		debugController_->EnableDebugLayer();
+		debugController_->SetEnableGPUBasedValidation(true);
+	}
+#endif // _DEBUG
+
 	ShowWindow(hwnd_, SW_SHOW);
 }
 
-int WinApp::ProccessMessage() {
+bool WinApp::ProcessMessage() {
 	MSG msg;
 
-	//Windowのメッセージを最優先で処理させる
-	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
@@ -64,8 +54,13 @@ int WinApp::ProccessMessage() {
 	if (msg.message == WM_QUIT) {
 		return true;
 	}
-
 	return false;
 }
 
+void WinApp::Finalize() {
+	debugController_->Release();
+}
+
 HWND WinApp::hwnd_;
+UINT WinApp::windowStyle_;
+ID3D12Debug1* WinApp::debugController_;
