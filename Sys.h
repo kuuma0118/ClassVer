@@ -9,7 +9,7 @@ class DrawTriangle
 {
 public:
 	void Initialize(DirectXCommon* direct);
-	void Draw(const Vector4& a, const Vector4& b, const Vector4& c);
+	void Draw(const TriangleDate& v1, const TriangleDate& v2, const TriangleDate& v3);
 	void Finalize();
 
 private:
@@ -18,7 +18,7 @@ private:
 private:
 	CreateEngine* Engine;
 	DirectXCommon* direct_;
-	Vector4* vertexData_;
+	TriangleDate* vertexData_;
 	ID3D12Resource* vertexResource_;
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
 };

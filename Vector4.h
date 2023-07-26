@@ -9,3 +9,9 @@ struct Vector4 {
 	float z;
 	float w;
 };
+
+ struct TriangleDate {
+	Vector4 v1;
+	Vector4 v2;
+	Vector4 v3;
+};

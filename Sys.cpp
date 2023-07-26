@@ -8,10 +8,10 @@ void DrawTriangle::Initialize(DirectXCommon* direct) {
 
 }
 
-void DrawTriangle::Draw(const Vector4& a, const Vector4& b, const Vector4& c) {
-	vertexData_[0] = a;
-	vertexData_[1] = b;
-	vertexData_[2] = c;
+void DrawTriangle::Draw(const TriangleDate& v1, const TriangleDate& v2, const TriangleDate& v3) {
+	vertexData_[0] = v1;
+	vertexData_[1] = v2;
+	vertexData_[2] = v3;
 
 	direct_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
 	direct_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

@@ -21,7 +21,7 @@ private:
 	static WinApp* win_;
 	static DirectXCommon* direct_;
 
-	DrawTriangle* triangle[10];
+	DrawTriangle* triangle[2];
 
 	IDxcUtils* dxcUtils_;
 	IDxcCompiler3* dxcCompiler_;
@@ -43,9 +43,7 @@ private:
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[1];
 
 	Vector4 vertexData_;
-	Vector4 data1[10];
-	Vector4 data2[10];
-	Vector4 data3[10];
+	TriangleDate TriangleVertex[2];
 
 	IDxcBlob* CompileShader(
 		const std::wstring& filePath,

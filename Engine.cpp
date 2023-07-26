@@ -194,47 +194,11 @@ void CreateEngine::SettingScissor() {
 }
 
 void CreateEngine::variableInitialize() {
-	data1[0] = { -0.5f,-0.4f,0.0f,1.0f };
-	data2[0] = { -0.45f,0.4f,0.0f,1.0f };
-	data3[0] = { -0.4f,-0.1f,0.0f,1.0f };
+	TriangleVertex[0] = { -0.5f,-0.4f,0.0f,1.0f,-0.45f,0.4f,0.0f,1.0f,-0.4f,-0.1f,0.0f,1.0f };
 
-	data1[1] = { -0.2f,-0.5f,0.0f,1.0f };
-	data2[1] = { -0.15f,-0.5f,0.0f,1.0f };
-	data3[1] = { -0.1f,-0.3f,0.0f,1.0f };
+	TriangleVertex[1] = { -0.4f,-0.2f,0.0f,1.0f,-0.35f,-0.2f,0.0f,1.0f,-0.3f,-0.7f,0.0f,1.0f };
 
-	data1[2] = { -0.4f,-0.2f,0.0f,1.0f };
-	data2[2] = { -0.35f,-0.2f,0.0f,1.0f };
-	data3[2] = { -0.3f,-0.7f,0.0f,1.0f };
-
-	data1[3] = { 0.9f,0.2f,0.0f,1.0f };
-	data2[3] = { 0.95f,0.2f,0.0f,1.0f };
-	data3[3] = { 0.1f,0.7f,0.0f,1.0f };
-
-	data1[4] = { 0.2f, 0.3f,0.0f,1.0f };
-	data2[4] = { 0.25f, 0.3f,0.0f,1.0f };
-	data3[4] = { 0.5f, 0.3f,0.0f,1.0f };
-
-	data1[5] = { -0.9f,0.7f,0.0f,1.0f };
-	data2[5] = { -0.95f,0.9f,0.0f,1.0f };
-	data3[5] = { -0.0f,0.7f,0.0f,1.0f };
-
-	data1[6] = { 0.7f,-0.5f,0.0f,1.0f };
-	data2[6] = { 0.75f,-0.7f,0.0f,1.0f };
-	data3[6] = { 0.3f,-0.5f,0.0f,1.0f };
-
-	data1[7] = { 0.9f,-0.3f,0.0f,1.0f };
-	data2[7] = { 0.95f,-0.5f,0.0f,1.0f };
-	data3[7] = { 0.1f,-0.3f,0.0f,1.0f };
-
-	data1[8] = { -0.7f,0.1f,0.0f,1.0f };
-	data2[8] = { -0.75f,0.3f,0.0f,1.0f };
-	data3[8] = { -0.5f,0.1f,0.0f,1.0f };
-
-	data1[9] = { 0.45f,-0.5f,0.0f,1.0f };
-	data2[9] = { 0.45f,-0.7f,0.0f,1.0f };
-	data3[9] = { 0.6f,-0.5f,0.0f,1.0f };
-
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 2; i++) {
 		triangle[i] = new DrawTriangle();
 		triangle[i]->Initialize(direct_);
 	}
@@ -276,7 +240,7 @@ void CreateEngine::EndFrame() {
 }
 
 void CreateEngine::Finalize() {
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 2; i++) {
 		triangle[i]->Finalize();
 	}
 	graphicsPipelineState_->Release();
@@ -295,8 +259,8 @@ void CreateEngine::Update() {
 }
 
 void CreateEngine::Draw() {
-	for (int i = 0; i < 10; i++) {
-		triangle[i]->Draw(data1[i], data2[i], data3[i]);
+	for (int i = 0; i < 2; i++) {
+		triangle[i]->Draw(TriangleVertex[i], TriangleVertex[i], TriangleVertex[i]);
 	}
 }
 
