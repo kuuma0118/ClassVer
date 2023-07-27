@@ -98,6 +98,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="Sys.h" />
+    <ClInclude Include="Vector4.h" />
     <ClInclude Include="WinApp.h" />
   </ItemGroup>
   <ItemGroup>

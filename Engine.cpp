@@ -194,9 +194,18 @@ void CreateEngine::SettingScissor() {
 }
 
 void CreateEngine::variableInitialize() {
-	TriangleVertex[0] = { -0.5f,-0.4f,0.0f,1.0f,-0.45f,0.4f,0.0f,1.0f,-0.4f,-0.1f,0.0f,1.0f };
 
-	TriangleVertex[1] = { -0.4f,-0.2f,0.0f,1.0f,-0.35f,-0.2f,0.0f,1.0f,-0.3f,-0.7f,0.0f,1.0f };
+	vertexData_[0] = { -0.5f,-0.4f,0.0f,1.0f, };
+	vertexData_[1] = { -0.45f,0.4f,0.0f,1.0f };
+	vertexData_[2] = { -0.4f,-0.1f,0.0f,1.0f };
+	vertexData_[3] = { -0.4f,-0.2f,0.0f,1.0f };
+	vertexData_[4] = { -0.35f,-0.2f,0.0f,1.0f };
+	vertexData_[5] = { -0.3f,-0.7f,0.0f,1.0f };
+	
+
+	TriangleVertex[0] = { vertexData_[0],vertexData_[1],vertexData_[2] };
+
+	TriangleVertex[1] = { vertexData_[3],vertexData_[4],vertexData_[5] };
 
 	for (int i = 0; i < 2; i++) {
 		triangle[i] = new DrawTriangle();
