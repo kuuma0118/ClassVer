@@ -3,7 +3,7 @@
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	WinApp* win_ = nullptr;
-	CreateEngine* Engine = new CreateEngine;
+	ModelEngine* Engine = new ModelEngine;
 	Engine->Initialize(win_, 1280, 720);
 
 	Engine->variableInitialize();

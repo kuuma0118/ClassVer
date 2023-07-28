@@ -1,7 +1,7 @@
 #include "Engine.h"
 #include <cassert>
 
-IDxcBlob* CreateEngine::CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
+IDxcBlob* ModelEngine::CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
 	Log(ConvertString(std::format(L"Begin CompileShader, path:{},profile:{}\n", filePath, profile)));
 	IDxcBlobEncoding* shaderSource = nullptr;
 	direct_->SetHr(dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource));
@@ -52,10 +52,10 @@ IDxcBlob* CreateEngine::CompileShader(const std::wstring& filePath, const wchar_
 	return shaderBlob;
 }
 
-void CreateEngine::InitializeDxcCompiler() {
+void ModelEngine::InitializeDxcCompiler() {
 	HRESULT hr;
-	//dxcUtils_ = nullptr;
-	//dxcCompiler_ = nullptr;
+	dxcUtils_ = nullptr;
+	dxcCompiler_ = nullptr;
 	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
 	assert(SUCCEEDED(hr));
 	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
@@ -66,10 +66,17 @@ void CreateEngine::InitializeDxcCompiler() {
 	assert(SUCCEEDED(hr));
 }
 
-void CreateEngine::CreateRootSignature() {
+void ModelEngine::CreateRootSignature() {
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags =
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+
+	D3D12_ROOT_PARAMETER rootParameters[1] = {};
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[0].Descriptor.ShaderRegister = 0;
+	descriptionRootSignature.pParameters = rootParameters;
+	descriptionRootSignature.NumParameters = _countof(rootParameters);
 
 	signatureBlob_ = nullptr;
 	errorBlob_ = nullptr;
@@ -89,7 +96,7 @@ void CreateEngine::CreateRootSignature() {
 	assert(SUCCEEDED(hr));
 }
 
-void CreateEngine::CreateInputlayOut() {
+void ModelEngine::CreateInputlayOut() {
 	inputElementDescs_[0].SemanticName = "POSITION";
 	inputElementDescs_[0].SemanticIndex = 0;
 	inputElementDescs_[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -99,26 +106,26 @@ void CreateEngine::CreateInputlayOut() {
 	inputLayoutDesc_.NumElements = _countof(inputElementDescs_);
 }
 
-void CreateEngine::SettingBlendState() {
+void ModelEngine::SettingBlendState() {
 	blendDesc_.RenderTarget[0].RenderTargetWriteMask =
 		D3D12_COLOR_WRITE_ENABLE_ALL;
 }
 
-void CreateEngine::SettingRasterizerState() {
+void ModelEngine::SettingRasterizerState() {
 	rasterizerDesc_.CullMode = D3D12_CULL_MODE_BACK;
 	rasterizerDesc_.FillMode = D3D12_FILL_MODE_SOLID;
 
-	vertexShaderBlob_ = CompileShader(L"Object3d.VS.hlsl",
+	vertexShaderBlob_ = CompileShader(L"./shader/Object3d.VS.hlsl",
 		L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(vertexShaderBlob_ != nullptr);
 
 
-	pixelShaderBlob_ = CompileShader(L"Object3d.PS.hlsl",
+	pixelShaderBlob_ = CompileShader(L"./shader/Object3d.PS.hlsl",
 		L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(pixelShaderBlob_ != nullptr);
 }
 
-void CreateEngine::InitializePSO() {
+void ModelEngine::InitializePSO() {
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	graphicsPipelineStateDesc.pRootSignature = rootSignature_;
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc_;
@@ -146,38 +153,7 @@ void CreateEngine::InitializePSO() {
 	assert(SUCCEEDED(hr));
 }
 
-void CreateEngine::SettingVertex() {
-	D3D12_HEAP_PROPERTIES uplodeHeapProperties{};
-	uplodeHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
-
-	D3D12_RESOURCE_DESC vertexResourceDesc{};
-
-	vertexResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	vertexResourceDesc.Width = sizeof(Vector4) * 3;
-
-	vertexResourceDesc.Height = 1;
-	vertexResourceDesc.DepthOrArraySize = 1;
-	vertexResourceDesc.MipLevels = 1;
-	vertexResourceDesc.SampleDesc.Count = 1;
-
-	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	HRESULT hr;
-
-	hr = direct_->GetDevice()->CreateCommittedResource(&uplodeHeapProperties, D3D12_HEAP_FLAG_NONE,
-		&vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&vertexResource_));
-	assert(SUCCEEDED(hr));
-
-	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-
-	vertexBufferView_.SizeInBytes = sizeof(Vector4) * 3;
-
-	vertexBufferView_.StrideInBytes = sizeof(Vector4);
-
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-}
-
-void CreateEngine::SettingViePort() {
+void ModelEngine::SettingViewPort() {
 	viewPort_.Width = WinApp::kClientWidth;
 	viewPort_.Height = WinApp::kClientHeight;
 	viewPort_.TopLeftX = 0;
@@ -186,34 +162,39 @@ void CreateEngine::SettingViePort() {
 	viewPort_.MaxDepth = 1.0f;
 }
 
-void CreateEngine::SettingScissor() {
+void ModelEngine::SettingScissor() {
 	scissorRect_.left = 0;
 	scissorRect_.right = WinApp::kClientWidth;
 	scissorRect_.top = 0;
 	scissorRect_.bottom = WinApp::kClientHeight;
 }
 
-void CreateEngine::variableInitialize() {
-
+void ModelEngine::variableInitialize() {
 	vertexData_[0].v1 = { -0.5f,-0.4f,0.0f,1.0f, };
 	vertexData_[0].v2 = { -0.45f,0.4f,0.0f,1.0f };
 	vertexData_[0].v3 = { -0.4f,-0.1f,0.0f,1.0f };
 	vertexData_[1].v1 = { -0.4f,-0.2f,0.0f,1.0f };
 	vertexData_[1].v2 = { -0.35f,-0.2f,0.0f,1.0f };
 	vertexData_[1].v3 = { -0.3f,-0.7f,0.0f,1.0f };
-	
+	vertexData_[2].v1 = { -0.6f,-0.5f,0.0f,1.0f };
+	vertexData_[2].v2 = { -0.65f,-0.5f,0.0f,1.0f };
+	vertexData_[2].v3 = { -0.6f,-0.2f,0.0f,1.0f };
 
-	TriangleVertex[0] = { vertexData_[0].v1,vertexData_[0].v2,vertexData_[0].v3 };
+	material[0] = { 1.0f,0.1f,1.0f,1.0f };
+	material[1] = { 2.0f,1.3f,1.4f,1.2f };
+	material[2] = { 0.3f,1.0f,0.4f,1.0f };
 
-	TriangleVertex[1] = { vertexData_[1].v1,vertexData_[1].v2,vertexData_[1].v3 };
-
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 3; i++) {
 		triangle[i] = new DrawTriangle();
-		triangle[i]->Initialize(direct_);
+		triangle[i]->Initialize( direct_,
+			{vertexData_[i].v1 },
+			{vertexData_[i].v2 },
+			{vertexData_[i].v3}, 
+			{material[i]});
 	}
 }
 
-void CreateEngine::Initialize(WinApp* win, int32_t width, int32_t height) {
+void ModelEngine::Initialize(WinApp* win, int32_t width, int32_t height) {
 	direct_->Initialize(win, win->kClientWidth, win->kClientHeight);
 
 	InitializeDxcCompiler();
@@ -229,13 +210,13 @@ void CreateEngine::Initialize(WinApp* win, int32_t width, int32_t height) {
 
 	InitializePSO();
 
-	SettingViePort();
+	SettingViewPort();
 
 	SettingScissor();
 }
 
 
-void CreateEngine::BeginFrame() {
+void ModelEngine::BeginFrame() {
 	direct_->PreDraw();
 	direct_->GetCommandList()->RSSetViewports(1, &viewPort_);
 	direct_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
@@ -244,34 +225,37 @@ void CreateEngine::BeginFrame() {
 	direct_->GetCommandList()->SetPipelineState(graphicsPipelineState_);
 }
 
-void CreateEngine::EndFrame() {
+void ModelEngine::EndFrame() {
 	direct_->PostDraw();
 }
 
-void CreateEngine::Finalize() {
-	for (int i = 0; i < 2; i++) {
+void ModelEngine::Finalize() {
+	for (int i = 0; i < 3; i++) {
 		triangle[i]->Finalize();
 	}
+
 	graphicsPipelineState_->Release();
 	signatureBlob_->Release();
+
 	if (errorBlob_) {
 		errorBlob_->Release();
 	}
+
 	rootSignature_->Release();
 	pixelShaderBlob_->Release();
 	vertexShaderBlob_->Release();
 	direct_->Finalize();
 }
 
-void CreateEngine::Update() {
+void ModelEngine::Update() {
 
 }
 
-void CreateEngine::Draw() {
-	for (int i = 0; i < 2; i++) {
-		triangle[i]->Draw(TriangleVertex[i], TriangleVertex[i], TriangleVertex[i]);
+void ModelEngine::Draw() {
+	for (int i = 0; i < 3; i++) {
+		triangle[i]->Draw();
 	}
 }
 
-WinApp* CreateEngine::win_;
-DirectXCommon* CreateEngine::direct_;
+WinApp* ModelEngine::win_;
+DirectXCommon* ModelEngine::direct_;

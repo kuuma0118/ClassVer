@@ -7,7 +7,7 @@
 
 #pragma comment(lib,"dxcompiler.lib")
 
-class CreateEngine {
+class ModelEngine {
 public:
 	void variableInitialize();
 	void Initialize(WinApp* win, int32_t width, int32_t height);
@@ -21,7 +21,7 @@ private:
 	static WinApp* win_;
 	static DirectXCommon* direct_;
 
-	DrawTriangle* triangle[2];
+	DrawTriangle* triangle[3];
 
 	IDxcUtils* dxcUtils_;
 	IDxcCompiler3* dxcCompiler_;
@@ -42,8 +42,10 @@ private:
 	D3D12_RECT scissorRect_{};
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[1];
 
-	TriangleDate vertexData_[2];
-	TriangleDate TriangleVertex[2];
+	TriangleDate vertexData_[3];
+	TriangleDate TriangleVertex[3];
+
+	Vector4 material[3];
 
 	IDxcBlob* CompileShader(
 		const std::wstring& filePath,
@@ -59,7 +61,9 @@ private:
 	void SettingBlendState();
 	void SettingRasterizerState();
 	void InitializePSO();
-	void SettingVertex();
-	void SettingViePort();
+	//void SettingVertex();
+	void SettingViewPort();
 	void SettingScissor();
+
+	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 };

@@ -3,22 +3,28 @@
 #include "Common.h"
 #include "Vector4.h"
 
-class CreateEngine;
+class ModelEngine;
 
 class DrawTriangle
 {
 public:
-	void Initialize(DirectXCommon* direct);
-	void Draw(const TriangleDate& v1, const TriangleDate& v2, const TriangleDate& v3);
+	void Initialize(DirectXCommon* direct, const Vector4& a, const Vector4& b, const Vector4& c, const Vector4& material);
+	void Draw();
 	void Finalize();
 
 private:
-	void SettingVertex();
+	void SettingVertex(const Vector4& a, const Vector4& b, const Vector4& c);
+	void SetColor(const Vector4& material);
 
 private:
-	CreateEngine* Engine;
+	ID3D12Resource* materialResource_;
+
+	ModelEngine* Engine;
 	DirectXCommon* direct_;
-	TriangleDate* vertexData_;
+	Vector4* vertexData_;
 	ID3D12Resource* vertexResource_;
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
+
+	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInByte);
+	Vector4* materialData_;
 };
