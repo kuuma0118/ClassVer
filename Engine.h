@@ -42,7 +42,7 @@ private:
 	D3D12_RECT scissorRect_{};
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[1];
 
-	Vector4 vertexData_[6];
+	TriangleDate vertexData_[2];
 	TriangleDate TriangleVertex[2];
 
 	IDxcBlob* CompileShader(
