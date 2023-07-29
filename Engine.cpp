@@ -263,11 +263,13 @@ void ModelEngine::Update() {
 	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(win_->kClientWidth) / float(win_->kClientHeight), 0.1f, 100.0f);
 	Matrix4x4 worldViewProjectionMatrix = Multiply(worldmatrix_, Multiply(viewMatrix, projectionMatrix));
 
-	material[0].x += 0.01f;
 	vertexTransform_.rotate.y += 0.03f;
 	worldmatrix_ = worldViewProjectionMatrix;
 
 	ImGui::Begin("Window");
+	ImGui::ColorEdit4("Color", &material[0].x);
+	ImGui::ColorEdit4("Color", &material[1].x);
+	ImGui::ColorEdit4("Color", &material[2].x);
 	ImGui::DragFloat3("CameraTranslate", &cameraTransform_.translate.x, 0.01f);
 	ImGui::End();
 }
