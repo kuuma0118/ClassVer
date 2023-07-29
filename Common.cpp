@@ -24,6 +24,18 @@ void DirectXCommon::Initialize(WinApp* win, int32_t backBufferWidth, int32_t bac
 	CreateFence();
 }
 
+void DirectXCommon::ImGuiInitialize() {
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+
+	ImGui_ImplWin32_Init(winApp_->GetHwnd());
+	ImGui_ImplDX12_Init(device_, swapChainDesc_.BufferCount,
+		rtvDesc_.Format, srvDescriptorHeap_,
+		srvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart(),
+		srvDescriptorHeap_->GetGPUDescriptorHandleForHeapStart());
+}
+
 void DirectXCommon::InitializeDXGIDevice() {
 	dxgiFactory_ = nullptr;
 	hr_ = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
@@ -111,24 +123,19 @@ void DirectXCommon::InitializeCommand() {
 
 void DirectXCommon::CreateSwapChain() {
 	swapChain_ = nullptr;
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-	swapChainDesc.Width = WinApp::kClientWidth;
-	swapChainDesc.Height = WinApp::kClientHeight;
-	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	swapChainDesc.SampleDesc.Count = 1;
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDesc.BufferCount = 2;
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
-	HRESULT	hr = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_, winApp_->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain_));
+	swapChainDesc_.Width = WinApp::kClientWidth;
+	swapChainDesc_.Height = WinApp::kClientHeight;
+	swapChainDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swapChainDesc_.SampleDesc.Count = 1;
+	swapChainDesc_.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	swapChainDesc_.BufferCount = 2;
+	swapChainDesc_.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+
+	HRESULT	hr = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_, winApp_->GetHwnd(), &swapChainDesc_, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain_));
 	assert(SUCCEEDED(hr));
 
-	rtvDescriptorHeap_ = nullptr;
-	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptionHeapDesc{};
-	rtvDescriptionHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvDescriptionHeapDesc.NumDescriptors = 2;
-	hr = device_->CreateDescriptorHeap(&rtvDescriptionHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap_));
-	assert(SUCCEEDED(hr));
+	rtvDescriptorHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
 
 	backBuffers_[0] = { nullptr };
 	backBuffers_[1] = { nullptr };
@@ -137,21 +144,22 @@ void DirectXCommon::CreateSwapChain() {
 	assert(SUCCEEDED(hr));
 	hr = swapChain_->GetBuffer(1, IID_PPV_ARGS(&backBuffers_[1]));
 	assert(SUCCEEDED(hr));
+
+	srvDescriptorHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128, true);
 }
 
 void DirectXCommon::CreateFinalRenderTargets() {
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	rtvDesc_.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle = rtvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 
 	rtvHandles_[0] = rtvStartHandle;
-	device_->CreateRenderTargetView(backBuffers_[0], &rtvDesc, rtvHandles_[0]);
+	device_->CreateRenderTargetView(backBuffers_[0], &rtvDesc_, rtvHandles_[0]);
 
 	rtvHandles_[1].ptr = rtvHandles_[0].ptr + device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	device_->CreateRenderTargetView(backBuffers_[1], &rtvDesc, rtvHandles_[1]);
+	device_->CreateRenderTargetView(backBuffers_[1], &rtvDesc_, rtvHandles_[1]);
 }
 
 void DirectXCommon::CreateFence() {
@@ -165,6 +173,10 @@ void DirectXCommon::CreateFence() {
 }
 
 void DirectXCommon::PreDraw() {
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
 
 	barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -175,13 +187,17 @@ void DirectXCommon::PreDraw() {
 	commandList_->ResourceBarrier(1, &barrier_);
 
 	commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex], false, nullptr);
-
 	float clearcolor[] = { 0.1f,0.25f,0.5f,1.0f };
+
 	commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex], clearcolor, 0, nullptr);
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap_ };
+	commandList_->SetDescriptorHeaps(1, descriptorHeaps);
 }
 
 void DirectXCommon::PostDraw() {
 	hr_;
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList_);
+
 	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 
@@ -208,6 +224,19 @@ void DirectXCommon::PostDraw() {
 	assert(SUCCEEDED(hr_));
 }
 
+ID3D12DescriptorHeap* DirectXCommon::CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
+	ID3D12DescriptorHeap* descriptorHeap = nullptr;
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
+	descriptorHeapDesc.Type = heapType;
+	descriptorHeapDesc.NumDescriptors = numDescriptors;
+	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+
+	HRESULT hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+	assert(SUCCEEDED(hr));
+
+	return descriptorHeap;
+}
+
 void DirectXCommon::ClearRenderTarget() {
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
 
@@ -221,6 +250,11 @@ void DirectXCommon::Finalize() {
 	CloseHandle(fenceEvent_);
 	fence_->Release();
 
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+
+	srvDescriptorHeap_->Release();
 	rtvDescriptorHeap_->Release();
 	backBuffers_[0]->Release();
 	backBuffers_[1]->Release();
@@ -255,7 +289,10 @@ ID3D12CommandQueue* DirectXCommon::commandQueue_;
 ID3D12CommandAllocator* DirectXCommon::commandAllocator_;
 ID3D12GraphicsCommandList* DirectXCommon::commandList_;
 IDXGISwapChain4* DirectXCommon::swapChain_;
+DXGI_SWAP_CHAIN_DESC1 DirectXCommon::swapChainDesc_{};
+D3D12_RENDER_TARGET_VIEW_DESC DirectXCommon::rtvDesc_{};
 ID3D12DescriptorHeap* DirectXCommon::rtvDescriptorHeap_;
+ID3D12DescriptorHeap* DirectXCommon::srvDescriptorHeap_;
 D3D12_CPU_DESCRIPTOR_HANDLE DirectXCommon::rtvHandles_[2];
 ID3D12Resource* DirectXCommon::backBuffers_[2];
 UINT64 DirectXCommon::fenceVal_;

@@ -34,19 +34,17 @@ private:
 	IDxcBlob* pixelShaderBlob_;
 	D3D12_RASTERIZER_DESC rasterizerDesc_{};
 	ID3D12PipelineState* graphicsPipelineState_;
-	ID3D12Resource* vertexResource_;
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
 
 	D3D12_VIEWPORT viewPort_{};
 	D3D12_RECT scissorRect_{};
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[1];
 
-	
+	Transform vertexTransform_;
 
 	Transform transform_;
 	Transform cameraTransform_;
 
-	Matrix4x4 worldMatrix_;
+	Matrix4x4 worldmatrix_;
 
 	DrawTriangle* triangle[3];
 	TriangleDate vertexData_[3];
@@ -68,9 +66,6 @@ private:
 	void SettingBlendState();
 	void SettingRasterizerState();
 	void InitializePSO();
-	//void SettingVertex();
 	void SettingViewPort();
 	void SettingScissor();
-
-	//ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 };

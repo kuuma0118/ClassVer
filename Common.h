@@ -11,6 +11,8 @@ public:
 		WinApp* win, int32_t backBufferWidth = WinApp::kClientWidth,
 		int32_t backBufferHeight = WinApp::kClientHeight);
 
+	static void ImGuiInitialize();
+
 	void PreDraw();
 	void PostDraw();
 
@@ -32,8 +34,11 @@ private:
 	static ID3D12CommandAllocator* commandAllocator_;
 	static ID3D12GraphicsCommandList* commandList_;
 	static IDXGISwapChain4* swapChain_;
+	static DXGI_SWAP_CHAIN_DESC1 swapChainDesc_;
 	static ID3D12DescriptorHeap* rtvDescriptorHeap_;
+	static ID3D12DescriptorHeap* srvDescriptorHeap_;
 
+	static D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_;
 	static D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2];
 	static ID3D12Resource* backBuffers_[2];
 	static UINT64 fenceVal_;
@@ -44,6 +49,8 @@ private:
 	static ID3D12Fence* fence_;
 	static HANDLE fenceEvent_;
 	static HRESULT hr_;
+
+	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 
 private:
 	void InitializeDXGIDevice();
