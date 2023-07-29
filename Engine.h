@@ -4,6 +4,7 @@
 #include <dxcapi.h>
 #include "Vector4.h"
 #include "Sys.h"
+#include "Transform.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -20,8 +21,6 @@ public:
 private:
 	static WinApp* win_;
 	static DirectXCommon* direct_;
-
-	DrawTriangle* triangle[3];
 
 	IDxcUtils* dxcUtils_;
 	IDxcCompiler3* dxcCompiler_;
@@ -42,6 +41,14 @@ private:
 	D3D12_RECT scissorRect_{};
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[1];
 
+	
+
+	Transform transform_;
+	Transform cameraTransform_;
+
+	Matrix4x4 worldMatrix_;
+
+	DrawTriangle* triangle[3];
 	TriangleDate vertexData_[3];
 	TriangleDate TriangleVertex[3];
 
@@ -65,5 +72,5 @@ private:
 	void SettingViewPort();
 	void SettingScissor();
 
-	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
+	//ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 };

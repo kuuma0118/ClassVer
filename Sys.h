@@ -2,19 +2,21 @@
 
 #include "Common.h"
 #include "Vector4.h"
+#include "MatrixCalculate.h"
 
 class ModelEngine;
 
 class DrawTriangle
 {
 public:
-	void Initialize(DirectXCommon* direct, const Vector4& a, const Vector4& b, const Vector4& c, const Vector4& material);
-	void Draw();
+	void Initialize(DirectXCommon* direct);
+	void Draw(const Vector4& a, const Vector4& b, const Vector4& c, const Vector4& material, const Matrix4x4& wvpData);
 	void Finalize();
 
 private:
-	void SettingVertex(const Vector4& a, const Vector4& b, const Vector4& c);
-	void SetColor(const Vector4& material);
+	void SettingVertex();
+	void SetColor();
+	void TransformMatrix();
 
 private:
 	ID3D12Resource* materialResource_;
@@ -27,4 +29,7 @@ private:
 
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInByte);
 	Vector4* materialData_;
+
+	ID3D12Resource* wvpResource_;
+	Matrix4x4* wvpData_;
 };

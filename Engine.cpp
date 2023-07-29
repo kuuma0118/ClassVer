@@ -71,10 +71,15 @@ void ModelEngine::CreateRootSignature() {
 	descriptionRootSignature.Flags =
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-	D3D12_ROOT_PARAMETER rootParameters[1] = {};
+	D3D12_ROOT_PARAMETER rootParameters[2] = {};
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].Descriptor.ShaderRegister = 0;
+
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[1].Descriptor.ShaderRegister = 0;
+
 	descriptionRootSignature.pParameters = rootParameters;
 	descriptionRootSignature.NumParameters = _countof(rootParameters);
 
@@ -170,27 +175,25 @@ void ModelEngine::SettingScissor() {
 }
 
 void ModelEngine::variableInitialize() {
-	vertexData_[0].v1 = { -0.5f,-0.4f,0.0f,1.0f, };
-	vertexData_[0].v2 = { -0.45f,0.4f,0.0f,1.0f };
-	vertexData_[0].v3 = { -0.4f,-0.1f,0.0f,1.0f };
-	vertexData_[1].v1 = { -0.4f,-0.2f,0.0f,1.0f };
-	vertexData_[1].v2 = { -0.35f,-0.2f,0.0f,1.0f };
-	vertexData_[1].v3 = { -0.3f,-0.7f,0.0f,1.0f };
-	vertexData_[2].v1 = { -0.6f,-0.5f,0.0f,1.0f };
-	vertexData_[2].v2 = { -0.65f,-0.5f,0.0f,1.0f };
-	vertexData_[2].v3 = { -0.6f,-0.2f,0.0f,1.0f };
+	vertexData_[0].v1 = { -0.1f,0.1f,0.0f,1.0f };
+	vertexData_[0].v2 = { 0.0f,0.3f,0.0f,1.0f };
+	vertexData_[0].v3 = { 0.1f,0.1f,0.0f,1.0f };
+	vertexData_[1].v1 = { -0.1f,-0.3f,0.0f,1.0f };
+	vertexData_[1].v2 = { 0.0f,-0.1f,0.0f,1.0f };
+	vertexData_[1].v3 = { 0.1f,-0.3f,0.0f,1.0f };
+	vertexData_[2].v1 = { -0.1f,-0.7f,0.0f,1.0f };
+	vertexData_[2].v2 = { 0.0f,-0.5f,0.0f,1.0f };
+	vertexData_[2].v3 = { 0.1f,-0.7f,0.0f,1.0f };
 
 	material[0] = { 1.0f,0.1f,1.0f,1.0f };
 	material[1] = { 2.0f,1.3f,1.4f,1.2f };
 	material[2] = { 0.3f,1.0f,0.4f,1.0f };
 
+	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+
 	for (int i = 0; i < 3; i++) {
 		triangle[i] = new DrawTriangle();
-		triangle[i]->Initialize( direct_,
-			{vertexData_[i].v1 },
-			{vertexData_[i].v2 },
-			{vertexData_[i].v3}, 
-			{material[i]});
+		triangle[i]->Initialize(direct_);
 	}
 }
 
@@ -248,12 +251,20 @@ void ModelEngine::Finalize() {
 }
 
 void ModelEngine::Update() {
+	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
+	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(win_->kClientWidth) / float(win_->kClientHeight), 0.1f, 100.0f);
+	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix_, Multiply(viewMatrix, projectionMatrix));
 
+	material[0].x += 0.01f;
+	transform_.rotate.y += 0.03f;
+	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 }
 
 void ModelEngine::Draw() {
 	for (int i = 0; i < 3; i++) {
-		triangle[i]->Draw();
+		triangle[i]->Draw(vertexData_[i].v1, vertexData_[i].v2, vertexData_[i].v3, material[i], worldMatrix_);
 	}
 }
 
