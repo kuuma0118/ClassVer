@@ -2,8 +2,9 @@
 #include <assert.h>
 #include "Engine.h"
 
-void DrawTriangle::Initialize(DirectXCommon* direct) {
+void DrawTriangle::Initialize(DirectXCommon* direct,ModelEngine* engine) {
 	direct_ = direct;
+	Engine = engine;
 	SettingVertex();
 	SetColor();
 	TransformMatrix();
@@ -36,6 +37,8 @@ void DrawTriangle::Draw(const Vector4& a, const Vector4& b, const Vector4& c, co
 
 	direct_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	direct_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+
+	direct_->GetCommandList()->SetGraphicsRootDescriptorTable(2, Engine->GetSrvHandleGPU());
 
 	direct_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }

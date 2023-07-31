@@ -2,6 +2,9 @@
 #include "Sys.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+
+	CoInitializeEx(0, COINIT_MULTITHREADED);
+
 	WinApp* win_ = nullptr;
 	ModelEngine* Engine = new ModelEngine;
 	Engine->Initialize(win_, 1280, 720);
@@ -22,5 +25,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	Engine->Finalize();
+	CoUninitialize();
+
 	return 0;
 }

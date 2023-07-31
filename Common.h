@@ -4,6 +4,7 @@
 #include <dxgi1_6.h>
 #include "WinApp.h"
 #include "String.h"
+#include "externals/DirectXTex/DirectXTex.h"
 
 class DirectXCommon {
 public:
@@ -24,6 +25,8 @@ public:
 
 	ID3D12Device* GetDevice() { return device_; }
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList_; }
+
+	ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap_; }
 
 private:
 	static WinApp* winApp_;

@@ -1,15 +1,21 @@
 #pragma once
 
 #include "Common.h"
+#include "Vector2.h"
 #include "Vector4.h"
 #include "MatrixCalculate.h"
+
+struct VertexData {
+	Vector4 position;
+	Vector2 texcoord;
+};
 
 class ModelEngine;
 
 class DrawTriangle
 {
 public:
-	void Initialize(DirectXCommon* direct);
+	void Initialize(DirectXCommon* direct, ModelEngine* engine);
 	void Draw(const Vector4& a, const Vector4& b, const Vector4& c, const Vector4& material, const Matrix4x4& wvpData);
 	void Finalize();
 
