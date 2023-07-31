@@ -125,7 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Object3d.hlsli">
+    <None Include="shader\Object3d.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
