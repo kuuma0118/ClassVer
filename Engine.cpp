@@ -4,9 +4,9 @@
 IDxcBlob* ModelEngine::CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
 	Log(ConvertString(std::format(L"Begin CompileShader, path:{},profile:{}\n", filePath, profile)));
 	IDxcBlobEncoding* shaderSource = nullptr;
-	direct_->SetHr(dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource));
+	directXCommon_->SetHr(dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource));
 
-	assert(SUCCEEDED(direct_->GetHr()));
+	assert(SUCCEEDED(directXCommon_->GetHr()));
 
 	DxcBuffer shaderSourceBuffer;
 	shaderSourceBuffer.Ptr = shaderSource->GetBufferPointer();
@@ -23,7 +23,7 @@ IDxcBlob* ModelEngine::CompileShader(const std::wstring& filePath, const wchar_t
 	};
 
 	IDxcResult* shaderResult = nullptr;
-	direct_->SetHr(dxcCompiler->Compile(
+	directXCommon_->SetHr(dxcCompiler->Compile(
 		&shaderSourceBuffer,
 		arguments,
 		_countof(arguments),
@@ -31,7 +31,7 @@ IDxcBlob* ModelEngine::CompileShader(const std::wstring& filePath, const wchar_t
 		IID_PPV_ARGS(&shaderResult)
 	));
 
-	assert(SUCCEEDED(direct_->GetHr()));
+	assert(SUCCEEDED(directXCommon_->GetHr()));
 
 	IDxcBlobUtf8* shaderError = nullptr;
 	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
@@ -41,8 +41,8 @@ IDxcBlob* ModelEngine::CompileShader(const std::wstring& filePath, const wchar_t
 	}
 
 	IDxcBlob* shaderBlob = nullptr;
-	direct_->SetHr(shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr));
-	assert(SUCCEEDED(direct_->GetHr()));
+	directXCommon_->SetHr(shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr));
+	assert(SUCCEEDED(directXCommon_->GetHr()));
 
 	Log(ConvertString(std::format(L"Compile Succeeded, path:{},profile:{}\n", filePath, profile)));
 
@@ -74,8 +74,8 @@ void ModelEngine::CreateRootSignature() {
 	D3D12_ROOT_PARAMETER rootParameters[3] = {};
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters[0].Descriptor.ShaderRegister = 0;
 
+	rootParameters[0].Descriptor.ShaderRegister = 0;
 	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	rootParameters[1].Descriptor.ShaderRegister = 0;
@@ -85,10 +85,13 @@ void ModelEngine::CreateRootSignature() {
 	descriptoraRange[0].NumDescriptors = 1;
 	descriptoraRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptoraRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
 	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptoraRange;
 	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptoraRange);
+
+
 	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
 	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -101,7 +104,6 @@ void ModelEngine::CreateRootSignature() {
 
 	descriptionRootSignature.pParameters = rootParameters;
 	descriptionRootSignature.NumParameters = _countof(rootParameters);
-
 	descriptionRootSignature.pStaticSamplers = staticSamplers;
 	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
 
@@ -112,13 +114,14 @@ void ModelEngine::CreateRootSignature() {
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
 		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_, &errorBlob_);
 
-	if (FAILED(direct_->GetHr())) {
+	if (FAILED(directXCommon_->GetHr())) {
 		Log(reinterpret_cast<char*>(errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
 
 	rootSignature_ = nullptr;
-	hr = direct_->GetDevice()->CreateRootSignature(0, signatureBlob_->GetBufferPointer(),
+
+	hr = directXCommon_->GetDevice()->CreateRootSignature(0, signatureBlob_->GetBufferPointer(),
 		signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&rootSignature_));
 	assert(SUCCEEDED(hr));
 }
@@ -134,7 +137,6 @@ void ModelEngine::CreateInputlayOut() {
 	inputElementDescs_[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	inputElementDescs_[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
-
 	inputLayoutDesc_.pInputElementDescs = inputElementDescs_;
 	inputLayoutDesc_.NumElements = _countof(inputElementDescs_);
 }
@@ -148,12 +150,12 @@ void ModelEngine::SettingRasterizerState() {
 	rasterizerDesc_.CullMode = D3D12_CULL_MODE_BACK;
 	rasterizerDesc_.FillMode = D3D12_FILL_MODE_SOLID;
 
-	vertexShaderBlob_ = CompileShader(L"./shader/Object3d.VS.hlsl",
+	vertexShaderBlob_ = CompileShader(L"shader/Object3d.VS.hlsl",
 		L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(vertexShaderBlob_ != nullptr);
 
 
-	pixelShaderBlob_ = CompileShader(L"./shader/Object3d.PS.hlsl",
+	pixelShaderBlob_ = CompileShader(L"shader/Object3d.PS.hlsl",
 		L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(pixelShaderBlob_ != nullptr);
 }
@@ -179,9 +181,11 @@ void ModelEngine::InitializePSO() {
 
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc_;
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	graphicsPipelineState_ = nullptr;
-	HRESULT hr = direct_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+	HRESULT hr = directXCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&graphicsPipelineState_));
 	assert(SUCCEEDED(hr));
 }
@@ -202,116 +206,94 @@ void ModelEngine::SettingScissor() {
 	scissorRect_.bottom = WinApp::kClientHeight;
 }
 
-void ModelEngine::variableInitialize() {
-	vertexData_[0].v1 = { -0.1f,0.1f,0.0f,1.0f };
-	vertexData_[0].v2 = { 0.0f,0.3f,0.0f,1.0f };
-	vertexData_[0].v3 = { 0.1f,0.1f,0.0f,1.0f };
-	vertexData_[1].v1 = { -0.1f,-0.3f,0.0f,1.0f };
-	vertexData_[1].v2 = { 0.0f,-0.1f,0.0f,1.0f };
-	vertexData_[1].v3 = { 0.1f,-0.3f,0.0f,1.0f };
-	vertexData_[2].v1 = { -0.1f,-0.7f,0.0f,1.0f };
-	vertexData_[2].v2 = { 0.0f,-0.5f,0.0f,1.0f };
-	vertexData_[2].v3 = { 0.1f,-0.7f,0.0f,1.0f };
-
-	material[0] = { 1.0f,0.1f,1.0f,1.0f };
-	material[1] = { 2.0f,1.3f,1.4f,1.2f };
-	material[2] = { 0.3f,1.0f,0.4f,1.0f };
-
-	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f} };
-	vertexTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
-
-	for (int i = 0; i < 3; i++) {
-		triangle[i] = new DrawTriangle();
-		triangle[i]->Initialize(direct_,this);
-	}
-	LoadTexture("resources/uvChecker.png");
+void ModelEngine::SettingDepth() {
+	depthStencilDesc_.DepthEnable = true;
+	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 }
 
-void ModelEngine::Initialize(WinApp* win, int32_t width, int32_t height) {
-	direct_->Initialize(win, win->kClientWidth, win->kClientHeight);
+void ModelEngine::VariableInitialize() {
+
+}
+
+void ModelEngine::Initialize(WinApp* winApp, int32_t width, int32_t height) {
+	winApp_ = winApp;
+	winApp_ = new WinApp();
+
+	directXCommon_ = new DirectXCommon();
+	directXCommon_->Initialize(winApp_, winApp_->kClientWidth, winApp_->kClientHeight);
+
+	imguiManager_ = new ImGuiManager();
+	imguiManager_->Initialize(winApp_, directXCommon_);
 
 	InitializeDxcCompiler();
 
-
 	CreateRootSignature();
 	CreateInputlayOut();
-
 
 	SettingBlendState();
 
 	SettingRasterizerState();
 
+	SettingDepth();
 	InitializePSO();
 
 	SettingViewPort();
-
 	SettingScissor();
-
-	direct_->ImGuiInitialize();
 }
 
 
 void ModelEngine::BeginFrame() {
-	direct_->PreDraw();
-	direct_->GetCommandList()->RSSetViewports(1, &viewPort_);
-	direct_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
+	imguiManager_->Begin();
 
-	direct_->GetCommandList()->SetGraphicsRootSignature(rootSignature_);
-	direct_->GetCommandList()->SetPipelineState(graphicsPipelineState_);
+	directXCommon_->GetCommandList()->RSSetViewports(1, &viewPort_);
+	directXCommon_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
 
-	ImGui::ShowDemoWindow();
+	directXCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature_);
+	directXCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState_);
+
+	directXCommon_->PreDraw();
 }
 
 void ModelEngine::EndFrame() {
-	ImGui::Render();
-	direct_->PostDraw();
+	imguiManager_->End();
+	imguiManager_->Draw();
+
+	directXCommon_->PostDraw();
 }
 
 void ModelEngine::Finalize() {
-	textureResource->Release();
-	for (int i = 0; i < 3; i++) {
-		triangle[i]->Finalize();
-	}
+	intermediateResource_->Release();
+	textureResource_->Release();
+
+	imguiManager_->Finalize();
 
 	graphicsPipelineState_->Release();
-	signatureBlob_->Release();
 
+	signatureBlob_->Release();
 	if (errorBlob_) {
 		errorBlob_->Release();
 	}
 
 	rootSignature_->Release();
+
 	pixelShaderBlob_->Release();
 	vertexShaderBlob_->Release();
-	direct_->Finalize();
+
+	directXCommon_->Finalize();
 }
 
 void ModelEngine::Update() {
-	worldmatrix_ = MakeAffineMatrix(vertexTransform_.scale, vertexTransform_.rotate, vertexTransform_.translate);
-	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
-	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(win_->kClientWidth) / float(win_->kClientHeight), 0.1f, 100.0f);
-	Matrix4x4 worldViewProjectionMatrix = Multiply(worldmatrix_, Multiply(viewMatrix, projectionMatrix));
 
-	vertexTransform_.rotate.y += 0.03f;
-	worldmatrix_ = worldViewProjectionMatrix;
-
-	ImGui::Begin("Window");
-	ImGui::ColorEdit4("Color", &material[0].x);
-	ImGui::ColorEdit4("Color", &material[1].x);
-	ImGui::ColorEdit4("Color", &material[2].x);
-	ImGui::DragFloat3("CameraTranslate", &cameraTransform_.translate.x, 0.01f);
-	ImGui::End();
 }
 
 void ModelEngine::Draw() {
-	for (int i = 0; i < 3; i++) {
-		triangle[i]->Draw(vertexData_[i].v1, vertexData_[i].v2, vertexData_[i].v3, material[i], worldmatrix_);
-	}
+	ImGui::ShowDemoWindow();
 }
-ID3D12Resource* ModelEngine::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata)
-{
+
+ID3D12Resource* ModelEngine::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata) {
 	D3D12_RESOURCE_DESC resourceDesc{};
+
 	resourceDesc.Width = UINT(metadata.width);
 	resourceDesc.Height = UINT(metadata.height);
 	resourceDesc.MipLevels = UINT16(metadata.mipLevels);
@@ -321,29 +303,36 @@ ID3D12Resource* ModelEngine::CreateTextureResource(ID3D12Device* device, const D
 	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);
 
 	D3D12_HEAP_PROPERTIES heapProperties{};
-	heapProperties.Type = D3D12_HEAP_TYPE_CUSTOM;
-	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
 
 	ID3D12Resource* resource = nullptr;
-	HRESULT hr = device->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&resource));
+	HRESULT hr = device->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&resource));
 	assert(SUCCEEDED(hr));
 	return resource;
 }
 
-void ModelEngine::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages) {
-	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
+ID3D12Resource* ModelEngine::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages) {
+	std::vector<D3D12_SUBRESOURCE_DATA>subResource
+		;
+	DirectX::PrepareUpload(directXCommon_->GetDevice(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subResource);
+	uint64_t  intermediateSize = GetRequiredIntermediateSize(texture, 0, UINT(subResource.size()));
+	intermediateResource_ = directXCommon_->CreateBufferResource(directXCommon_->GetDevice(), intermediateSize);
+	UpdateSubresources(directXCommon_->GetCommandList(), texture, intermediateResource_, 0, 0, UINT(subResource.size()), subResource.data());
 
-	for (size_t miplevel = 0; miplevel < metadata.mipLevels; ++miplevel) {
-		const DirectX::Image* img = mipImages.GetImage(miplevel, 0, 0);
-		HRESULT hr = texture->WriteToSubresource(UINT(miplevel), nullptr, img->pixels, UINT(img->rowPitch), UINT(img->slicePitch));
+	D3D12_RESOURCE_BARRIER barrier{};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = texture;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
 
-		assert(SUCCEEDED(hr));
-	}
+	directXCommon_->GetCommandList()->ResourceBarrier(1, &barrier);
+
+	return intermediateResource_;
 }
 
-DirectX::ScratchImage ModelEngine::SendTexture(const std::string& filePath)
-{
+DirectX::ScratchImage ModelEngine::SendTexture(const std::string& filePath) {
 	DirectX::ScratchImage image{};
 	std::wstring filePathW = ConvertString(filePath);
 	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
@@ -359,8 +348,8 @@ void ModelEngine::LoadTexture(const std::string& filePath) {
 	DirectX::ScratchImage mipImage = SendTexture(filePath);
 	const DirectX::TexMetadata& metaData = mipImage.GetMetadata();
 
-	textureResource = CreateTextureResource(direct_->GetDevice(), metaData);
-	UploadTextureData(textureResource, mipImage);
+	textureResource_ = CreateTextureResource(directXCommon_->GetDevice(), metaData);
+	UploadTextureData(textureResource_, mipImage);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = metaData.format;
@@ -368,14 +357,14 @@ void ModelEngine::LoadTexture(const std::string& filePath) {
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = UINT(metaData.mipLevels);
 
-	textureSrvHandleGPU_ = direct_->GetSrvDescriptorHeap()->GetGPUDescriptorHandleForHeapStart();
-	textureSrvHandleCPU_ = direct_->GetSrvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
+	textureSrvHandleGPU_ = directXCommon_->GetSrvHeap()->GetGPUDescriptorHandleForHeapStart();
+	textureSrvHandleCPU_ = directXCommon_->GetSrvHeap()->GetCPUDescriptorHandleForHeapStart();
 
-	textureSrvHandleGPU_.ptr += direct_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	textureSrvHandleCPU_.ptr += direct_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	textureSrvHandleGPU_.ptr += directXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	textureSrvHandleCPU_.ptr += directXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-	direct_->GetDevice()->CreateShaderResourceView(textureResource, &srvDesc, textureSrvHandleCPU_);
+	directXCommon_->GetDevice()->CreateShaderResourceView(textureResource_, &srvDesc, textureSrvHandleCPU_);
 }
 
-WinApp* ModelEngine::win_;
-DirectXCommon* ModelEngine::direct_;
+WinApp* ModelEngine::winApp_;
+DirectXCommon* ModelEngine::directXCommon_;

@@ -101,7 +101,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="MatrixCalculate.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="String.cpp" />
     <ClCompile Include="Sys.cpp" />
     <ClCompile Include="transform.cpp" />
@@ -119,8 +122,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="GameScene.h" />
+    <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="MatrixCalculate.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="Sys.h" />
     <ClInclude Include="transform.h" />

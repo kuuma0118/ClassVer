@@ -1,7 +1,7 @@
 #include "WinApp.h"
 #include <string>
 
-LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
 	}
@@ -11,6 +11,7 @@ LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 		PostQuitMessage(0);
 		return 0;
 	}
+
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
@@ -48,7 +49,7 @@ void WinApp::CreateGameWindow(const wchar_t* title, int32_t clientWidth, int32_t
 }
 
 bool WinApp::ProcessMessage() {
-	MSG msg;
+	MSG msg{};
 
 	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
@@ -58,13 +59,10 @@ bool WinApp::ProcessMessage() {
 	if (msg.message == WM_QUIT) {
 		return true;
 	}
+
 	return false;
 }
 
 void WinApp::Finalize() {
 	debugController_->Release();
 }
-
-HWND WinApp::hwnd_;
-UINT WinApp::windowStyle_;
-ID3D12Debug1* WinApp::debugController_;

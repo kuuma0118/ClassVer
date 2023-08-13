@@ -4,40 +4,63 @@
 #include <dxcapi.h>
 #include "Vector4.h"
 #include "Sys.h"
-#include "Transform.h"
+#include "ImGuiManager.h"
+
+#include "Externals/DirectXTex/d3dx12.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 
 class ModelEngine {
 public:
-	void variableInitialize();
-	void Initialize(WinApp* win, int32_t width, int32_t height);
+	void VariableInitialize();
+
+	void Initialize(WinApp* winApp, int32_t width, int32_t height);
+
 	void BeginFrame();
+
 	void EndFrame();
+
 	void Finalize();
+
 	void Update();
+
 	void Draw();
 
-	D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU() { return textureSrvHandleGPU_; }
+	void LoadTexture(const std::string& filePath);
+
+	DirectXCommon* GetDirectXCommon() { return directXCommon_; }
+
+	D3D12_CPU_DESCRIPTOR_HANDLE GetTextureSrvHandleCPU() { return textureSrvHandleCPU_; }
+	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
 
 private:
-
 	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU_;
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_;
 
-	static WinApp* win_;
-	static DirectXCommon* direct_;
+	static WinApp* winApp_;
+	static DirectXCommon* directXCommon_;
+
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc_{};
+
+	ImGuiManager* imguiManager_;
+
+	ID3D12Resource* intermediateResource_;
 
 	IDxcUtils* dxcUtils_;
 	IDxcCompiler3* dxcCompiler_;
+
 	IDxcIncludeHandler* includeHandler_;
-	ID3D10Blob* signatureBlob_;
-	ID3D10Blob* errorBlob_;
+
+	ID3DBlob* signatureBlob_;
+	ID3DBlob* errorBlob_;
+
 	ID3D12RootSignature* rootSignature_;
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc_{};
 	D3D12_BLEND_DESC blendDesc_{};
+
 	IDxcBlob* vertexShaderBlob_;
 	IDxcBlob* pixelShaderBlob_;
+
 	D3D12_RASTERIZER_DESC rasterizerDesc_{};
 	ID3D12PipelineState* graphicsPipelineState_;
 
@@ -45,20 +68,9 @@ private:
 	D3D12_RECT scissorRect_{};
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[2];
 
-	Transform vertexTransform_;
+	Vector4 vertexData_;
 
-	Transform transform_;
-	Transform cameraTransform_;
-
-	Matrix4x4 worldmatrix_;
-
-	DrawTriangle* triangle[3];
-	TriangleDate vertexData_[3];
-	TriangleDate TriangleVertex[3];
-
-	Vector4 material[3];
-
-	ID3D12Resource* textureResource;
+	ID3D12Resource* textureResource_;
 
 	IDxcBlob* CompileShader(
 		const std::wstring& filePath,
@@ -69,16 +81,21 @@ private:
 	);
 
 	void InitializeDxcCompiler();
+	void InitializePSO();
+
 	void CreateRootSignature();
 	void CreateInputlayOut();
+
 	void SettingBlendState();
 	void SettingRasterizerState();
-	void InitializePSO();
+
 	void SettingViewPort();
 	void SettingScissor();
 
+	void SettingDepth();
+
 	ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
-	void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages);
+	ID3D12Resource* UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages);
+
 	DirectX::ScratchImage SendTexture(const std::string& filePath);
-	void LoadTexture(const std::string& filePath);
 };
