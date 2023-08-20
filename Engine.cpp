@@ -60,7 +60,6 @@ void ModelEngine::InitializeDxcCompiler() {
 	assert(SUCCEEDED(hr));
 	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
 	assert(SUCCEEDED(hr));
-	//現時点でincludeはしないが、includeに対応するための設定を行っていく
 	includeHandler_ = nullptr;
 	hr = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
 	assert(SUCCEEDED(hr));
