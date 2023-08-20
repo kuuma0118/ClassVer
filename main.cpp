@@ -23,6 +23,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		gameScene->Draw3D();
 
+		gameScene->Draw2D();
+
 
 		engine->Draw();
 

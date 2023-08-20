@@ -53,6 +53,7 @@ void GameScene::Update() {
 	ImGui::DragFloat3("Sprite Scale", &spriteTransform_[0].scale.x, 0.01f);
 	ImGui::DragFloat3("Sprite Rotate", &spriteTransform_[0].rotate.x, 0.01f);
 	ImGui::DragFloat3("Sprite Translate", &spriteTransform_[0].translate.x, 1.0f);
+	ImGui::DragFloat3("camera", &cameraTransform_.translate.x, 0.01f);
 	ImGui::End();
 }
 
