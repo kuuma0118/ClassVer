@@ -6,7 +6,7 @@
 #include "Sys.h"
 #include "ImGuiManager.h"
 
-#include "Externals/DirectXTex/d3dx12.h"
+#include "externals/DirectXTex/d3dx12.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -26,17 +26,16 @@ public:
 
 	void Draw();
 
-	void LoadTexture(const std::string& filePath);
+	void LoadTexture(const std::string& filePath, uint32_t index);
 
 	DirectXCommon* GetDirectXCommon() { return directXCommon_; }
 
-	D3D12_CPU_DESCRIPTOR_HANDLE GetTextureSrvHandleCPU() { return textureSrvHandleCPU_; }
-	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU_[2];
+	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_[2];
 
+	D3D12_CPU_DESCRIPTOR_HANDLE GetTextureSrvHandleCPU(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
+	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 private:
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU_;
-	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_;
-
 	static WinApp* winApp_;
 	static DirectXCommon* directXCommon_;
 
@@ -44,7 +43,7 @@ private:
 
 	ImGuiManager* imguiManager_;
 
-	ID3D12Resource* intermediateResource_;
+	ID3D12Resource* intermediateResource_[2];
 
 	IDxcUtils* dxcUtils_;
 	IDxcCompiler3* dxcCompiler_;
@@ -70,7 +69,11 @@ private:
 
 	Vector4 vertexData_;
 
-	ID3D12Resource* textureResource_;
+	ID3D12Resource* textureResource_[2];
+
+	uint32_t descriptorSizeSRV_;
+	uint32_t descriptorSizeRTV_;
+	uint32_t descriptorSizeDSV_;
 
 	IDxcBlob* CompileShader(
 		const std::wstring& filePath,
@@ -95,7 +98,7 @@ private:
 	void SettingDepth();
 
 	ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
-	ID3D12Resource* UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages);
+	ID3D12Resource* UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages, uint32_t index);
 
-	DirectX::ScratchImage SendTexture(const std::string& filePath);
+	DirectX::ScratchImage LoadTexture(const std::string& filePath);
 };

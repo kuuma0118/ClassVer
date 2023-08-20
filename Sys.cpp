@@ -43,7 +43,7 @@ void Triangle::Draw(const Vector4& a, const Vector4& b, const Vector4& c, const 
 	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 
-	directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, engine_->GetTextureSrvHandleGPU());
+	directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, engine_->textureSrvHandleGPU_[0]);
 
 	directXCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }

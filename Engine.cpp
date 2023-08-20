@@ -226,6 +226,10 @@ void ModelEngine::Initialize(WinApp* winApp, int32_t width, int32_t height) {
 	imguiManager_ = new ImGuiManager();
 	imguiManager_->Initialize(winApp_, directXCommon_);
 
+	descriptorSizeSRV_ = directXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	descriptorSizeRTV_ = directXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	descriptorSizeDSV_ = directXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+
 	InitializeDxcCompiler();
 
 	CreateRootSignature();
@@ -263,8 +267,13 @@ void ModelEngine::EndFrame() {
 }
 
 void ModelEngine::Finalize() {
-	intermediateResource_->Release();
-	textureResource_->Release();
+	for (int i = 0; i < 2; i++) {
+		intermediateResource_[i]->Release();
+	}
+
+	for (int i = 0; i < 2; i++) {
+		textureResource_[i]->Release();
+	}
 
 	imguiManager_->Finalize();
 
@@ -311,13 +320,14 @@ ID3D12Resource* ModelEngine::CreateTextureResource(ID3D12Device* device, const D
 	return resource;
 }
 
-ID3D12Resource* ModelEngine::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages) {
-	std::vector<D3D12_SUBRESOURCE_DATA>subResource
-		;
+ID3D12Resource* ModelEngine::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages, uint32_t index) {
+	std::vector<D3D12_SUBRESOURCE_DATA>subResource;
+
 	DirectX::PrepareUpload(directXCommon_->GetDevice(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subResource);
 	uint64_t  intermediateSize = GetRequiredIntermediateSize(texture, 0, UINT(subResource.size()));
-	intermediateResource_ = directXCommon_->CreateBufferResource(directXCommon_->GetDevice(), intermediateSize);
-	UpdateSubresources(directXCommon_->GetCommandList(), texture, intermediateResource_, 0, 0, UINT(subResource.size()), subResource.data());
+
+	intermediateResource_[index] = directXCommon_->CreateBufferResource(directXCommon_->GetDevice(), intermediateSize);
+	UpdateSubresources(directXCommon_->GetCommandList(), texture, intermediateResource_[index], 0, 0, UINT(subResource.size()), subResource.data());
 
 	D3D12_RESOURCE_BARRIER barrier{};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -329,10 +339,10 @@ ID3D12Resource* ModelEngine::UploadTextureData(ID3D12Resource* texture, const Di
 
 	directXCommon_->GetCommandList()->ResourceBarrier(1, &barrier);
 
-	return intermediateResource_;
+	return intermediateResource_[index];
 }
 
-DirectX::ScratchImage ModelEngine::SendTexture(const std::string& filePath) {
+DirectX::ScratchImage ModelEngine::LoadTexture(const std::string& filePath) {
 	DirectX::ScratchImage image{};
 	std::wstring filePathW = ConvertString(filePath);
 	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
@@ -344,12 +354,12 @@ DirectX::ScratchImage ModelEngine::SendTexture(const std::string& filePath) {
 	return mipImages;
 }
 
-void ModelEngine::LoadTexture(const std::string& filePath) {
-	DirectX::ScratchImage mipImage = SendTexture(filePath);
+void ModelEngine::LoadTexture(const std::string& filePath, uint32_t index) {
+	DirectX::ScratchImage mipImage = LoadTexture(filePath);
 	const DirectX::TexMetadata& metaData = mipImage.GetMetadata();
 
-	textureResource_ = CreateTextureResource(directXCommon_->GetDevice(), metaData);
-	UploadTextureData(textureResource_, mipImage);
+	textureResource_[index] = CreateTextureResource(directXCommon_->GetDevice(), metaData);
+	UploadTextureData(textureResource_[index], mipImage, index);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = metaData.format;
@@ -357,14 +367,27 @@ void ModelEngine::LoadTexture(const std::string& filePath) {
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = UINT(metaData.mipLevels);
 
-	textureSrvHandleGPU_ = directXCommon_->GetSrvHeap()->GetGPUDescriptorHandleForHeapStart();
-	textureSrvHandleCPU_ = directXCommon_->GetSrvHeap()->GetCPUDescriptorHandleForHeapStart();
+	textureSrvHandleGPU_[index] = GetTextureSrvHandleGPU(directXCommon_->GetSrvHeap(), descriptorSizeSRV_, index + 1);
+	textureSrvHandleCPU_[index] = GetTextureSrvHandleCPU(directXCommon_->GetSrvHeap(), descriptorSizeSRV_, index + 1);
 
-	textureSrvHandleGPU_.ptr += directXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	textureSrvHandleCPU_.ptr += directXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	textureSrvHandleGPU_[index].ptr += directXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	textureSrvHandleCPU_[index].ptr += directXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-	directXCommon_->GetDevice()->CreateShaderResourceView(textureResource_, &srvDesc, textureSrvHandleCPU_);
+	directXCommon_->GetDevice()->CreateShaderResourceView(textureResource_[index], &srvDesc, textureSrvHandleCPU_[index]);
 }
+
+D3D12_CPU_DESCRIPTOR_HANDLE ModelEngine::GetTextureSrvHandleCPU(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	handleCPU.ptr += (descriptorSize * index);
+	return handleCPU;
+}
+
+D3D12_GPU_DESCRIPTOR_HANDLE ModelEngine::GetTextureSrvHandleGPU(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+	handleGPU.ptr += (descriptorSize * index);
+	return handleGPU;
+}
+
 
 WinApp* ModelEngine::winApp_;
 DirectXCommon* ModelEngine::directXCommon_;

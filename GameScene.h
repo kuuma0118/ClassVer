@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "ImGuiManager.h"
 #include "Sprite.h"
+#include "Sphere.h"
 
 class GameScene {
 public:
@@ -25,6 +26,12 @@ private:
 
 	Transform spriteTransform_[2];
 
+	Vector4 spriteMaterial_[2];
+	Sphere* sphere_;
+	Transform sphereTransform_;
+	Vector4 sphereMaterial_;
+	Matrix4x4 sphereMatrix_;
+
 	Vector4 data1_[2];
 	Vector4 data2_[2];
 	Vector4 data3_[2];
@@ -35,4 +42,6 @@ private:
 
 	Matrix4x4 worldMatrix_;
 	Transform cameraTransform_;
+	uint32_t uvResourceNumber_;
+	int monsterBallResourceNumber_;
 };
