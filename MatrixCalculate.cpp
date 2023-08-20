@@ -88,6 +88,23 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	return result;
 }
 
+Vector3 Normalize(const Vector3& v) {
+	float len = Length(v);
+	if (len != 0) {
+		return { v.x / len,v.y / len,v.z / len };
+	}
+	return v;
+}
+
+float Length(const Vector3& v) {
+	return sqrtf(Dot(v, v));
+
+}
+
+float Dot(const Vector3& v1, const Vector3& v2) {
+	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+}
+
 Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2) {
 	Matrix4x4 result;
 	for (int i = 0; i < 4; i++) {

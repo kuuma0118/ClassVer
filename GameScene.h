@@ -42,6 +42,7 @@ private:
 
 	Matrix4x4 worldMatrix_;
 	Transform cameraTransform_;
+	DirectionalLight directionalLight_;
 	uint32_t uvResourceNumber_;
 	int monsterBallResourceNumber_;
 };

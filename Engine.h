@@ -65,7 +65,7 @@ private:
 
 	D3D12_VIEWPORT viewPort_{};
 	D3D12_RECT scissorRect_{};
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[2];
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[3];
 
 	Vector4 vertexData_;
 
