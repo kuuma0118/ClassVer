@@ -46,6 +46,7 @@ void Sprite::Draw(const Vector4& a, const Vector4& b, const Transform transform,
 	*directionalLight_ = light;
 
 	directXCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+	directXCommon_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 	directXCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
@@ -53,7 +54,7 @@ void Sprite::Draw(const Vector4& a, const Vector4& b, const Transform transform,
 	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
 	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, engine_->textureSrvHandleGPU_[texIndex]);
-	directXCommon_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
+	directXCommon_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
 void Sprite::CreateDirectionalLight() {
@@ -66,6 +67,7 @@ void Sprite::Finalize() {
 	materialResource_->Release();
 	wvpResource_->Release();
 	directionalLightResource_->Release();
+	indexResource_->Release();
 }
 
 void Sprite::CreateVertexData() {
@@ -79,6 +81,21 @@ void Sprite::CreateVertexData() {
 	vertexBufferView_.StrideInBytes = sizeof(VertexData);
 
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+
+	indexResource_ = directXCommon_->CreateBufferResource(directXCommon_->GetDevice(), sizeof(uint32_t) * 6);
+
+	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
+	indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6;
+
+	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+
+	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
+	indexData_[0] = 0;
+	indexData_[1] = 1;
+	indexData_[2] = 2;
+	indexData_[3] = 1;
+	indexData_[4] = 3;
+	indexData_[5] = 2;
 }
 
 void Sprite::CreateTransform() {

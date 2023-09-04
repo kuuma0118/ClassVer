@@ -22,6 +22,10 @@ private:
 	ID3D12Resource* wvpResource_;
 	TransformationMatrix* wvpData_;
 
+	ID3D12Resource* indexResource_;
+	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
+	uint32_t* indexData_;
+
 	ID3D12Resource* materialResource_;
 	Material* materialData_;
 
