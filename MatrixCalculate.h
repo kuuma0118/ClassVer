@@ -7,6 +7,9 @@
 #include "Vector2.h"
 #include <stdint.h>
 
+#include <vector>
+#include <string>
+
 struct Transform {
 	Vector3 scale;
 	Vector3 rotate;
@@ -35,6 +38,15 @@ struct DirectionalLight {
 	Vector4 color;
 	Vector3 direction;
 	float intensity;
+};
+
+struct MaterialData {
+	std::string textureFilePath;
+};
+
+struct ModelData {
+	std::vector<VertexData> verticles;
+	MaterialData material;
 };
 
 Matrix4x4 MakeRotateXMatrix(float theta);
