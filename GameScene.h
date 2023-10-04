@@ -32,6 +32,8 @@ private:
 	Vector4 sphereMaterial_;
 	Matrix4x4 sphereMatrix_;
 
+	Transform spriteUvTransform_;
+
 	Vector4 data1_[2];
 	Vector4 data2_[2];
 	Vector4 data3_[2];

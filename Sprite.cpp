@@ -14,13 +14,18 @@ void Sprite::SetColor() {
 	materialResource_ = DirectXCommon::CreateBufferResource(directXCommon_->GetDevice(), sizeof(Material));
 
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	materialData_->uvTransform = MakeIdentity4x4();
 }
 
-void Sprite::Draw(const Vector4& a, const Vector4& b, const Transform transform, const Vector4& material, uint32_t texIndex, const DirectionalLight& light) {
+void Sprite::Draw(const Vector4& a, const Vector4& b, const Transform& transform,const Transform& uvTransform, const Vector4& material, uint32_t texIndex, const DirectionalLight& light) {
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 	Matrix4x4 viewMatrix = MakeIdentity4x4();
-	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, (float)directXCommon_->GetWin()->kClientWidth, (float)directXCommon_->GetWin()->kClientHeight, 0.0f, 100.0f);
+	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, (float)directXCommon_->GetWin()->kClientWidth,(float)directXCommon_->GetWin()->kClientHeight, 0.0f, 100.0f);
 	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+
+	Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
+	uvTransformMatrix = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
+	uvTransformMatrix = Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
 
 	vertexData_[0].position = { a.x,b.y,0.0f,1.0f };
 	vertexData_[1].position = { a.x,a.y,0.0f,1.0f };
@@ -41,6 +46,8 @@ void Sprite::Draw(const Vector4& a, const Vector4& b, const Transform transform,
 	}
 
 	*materialData_ = { material,false };
+
+	materialData_->uvTransform = uvTransformMatrix;
 
 	*wvpData_ = { worldViewProjectionMatrix,worldMatrix };
 	*directionalLight_ = light;
@@ -93,9 +100,9 @@ void Sprite::CreateVertexData() {
 	indexData_[0] = 0;
 	indexData_[1] = 1;
 	indexData_[2] = 2;
-	indexData_[3] = 1;
-	indexData_[4] = 3;
-	indexData_[5] = 2;
+	indexData_[3] = 4;
+	indexData_[4] = 2;
+	indexData_[5] = 3;
 }
 
 void Sprite::CreateTransform() {

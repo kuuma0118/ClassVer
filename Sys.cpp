@@ -32,6 +32,11 @@ void Triangle::Draw(const Vector4& a, const Vector4& b, const Vector4& c, const 
 
 	Matrix4x4 wvpmatrix_ = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 
+	Transform uvTransform = { { 1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f}, {0.0f,0.0f,0.0f} };
+	Matrix4x4 uvtransformMatrix = MakeScaleMatrix(uvTransform.scale);
+	uvtransformMatrix = Multiply(uvtransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
+	uvtransformMatrix = Multiply(uvtransformMatrix, MakeTranslateMatrix(uvTransform.translate));
+
 	vertexData_[0].position = a;
 	vertexData_[0].texcoord = { 0.0f,1.0f };
 
@@ -42,6 +47,9 @@ void Triangle::Draw(const Vector4& a, const Vector4& b, const Vector4& c, const 
 	vertexData_[2].texcoord = { 1.0f,1.0f };
 
 	*materialData_ = { material,false };
+
+	materialData_->uvTransform = uvtransformMatrix;
+
 	*wvpData_ = { wvpmatrix_,worldMatrix };
 	*directionalLight_ = light;
 

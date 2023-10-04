@@ -28,6 +28,12 @@ void GameScene::Initialize(ModelEngine* engine, DirectXCommon* directXCommon){
 	spriteMaterial_[0] = { 1.0f,1.0f,1.0f,1.0f };
 	sphereTransform_ = { {1.0f,1.0f,1.0f},{0.0f,1.6f,0.0f},{0.0f,0.0f,0.0f} };
 	sphereMaterial_ = { 1.0f,1.0f,1.0f,1.0f };
+
+	spriteUvTransform_ = {
+    {1.0f,1.0f,1.0f},
+    {0.0f,0.0f,0.0f},
+    {0.0f,0.0f,0.0f} };
+
 	sphere_ = new Sphere();
 	sphere_->Initialize(directXCommon_, engine_);
 	uvResourceNumber_ = 0;
@@ -61,6 +67,9 @@ void GameScene::Update() {
 	ImGui::InputInt("Resource Number", &monsterBallResourceNumber_);
 	ImGui::DragFloat("Intensity", &directionalLight_.intensity, 1.0f);
 	ImGui::DragFloat3("lightDirection", &directionalLight_.direction.x, 0.1f);
+	ImGui::DragFloat2("uvScale", &spriteUvTransform_.scale.x, 0.1f);
+	ImGui::DragFloat3("uvTranslate", &spriteUvTransform_.translate.x, 0.1f);
+	ImGui::DragFloat("uvRotate", &spriteUvTransform_.rotate.z, 0.1f);
 	
 	ImGui::End();
 }
@@ -73,9 +82,7 @@ void GameScene::Draw3D() {
 }
 
 void GameScene::Draw2D() {
-	for (int i = 0; i < 1; i++) {
-		sprite_[i]->Draw(spriteLeftTop_[i], spriteRightDown_[i], spriteTransform_[i], spriteMaterial_[0], uvResourceNumber_, directionalLight_);
-	}
+	sprite_[0]->Draw(spriteLeftTop_[0], spriteRightDown_[0], spriteTransform_[0], spriteUvTransform_, spriteMaterial_[0], uvResourceNumber_, directionalLight_);
 }
 
 void GameScene::Finalize() {

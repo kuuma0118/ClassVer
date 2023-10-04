@@ -125,6 +125,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="ImGuiManager.h" />
+    <ClInclude Include="Matrix3x3.h" />
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="MatrixCalculate.h" />
     <ClInclude Include="Sphere.h" />
