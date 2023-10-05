@@ -8,13 +8,15 @@
 #include <cstdint>
 #include <d3d12.h>
 
+#include <wrl.h>
+
 #pragma comment(lib,"d3d12.lib")
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 class WinApp {
 public:
-	ID3D12Debug1* GetDebugController() { return debugController_; }
+	Microsoft::WRL::ComPtr<ID3D12Debug1> GetDebugController() { return debugController_; }
 
 	static const int32_t kClientWidth = 1280;
 	static const int32_t kClientHeight = 720;
@@ -31,7 +33,7 @@ public:
 	void CreateGameWindow(const wchar_t* title, int32_t clientWidth, int32_t clientHeight);
 
 private:
-	ID3D12Debug1* debugController_;
+	Microsoft::WRL::ComPtr<ID3D12Debug1> debugController_;
 
 	WNDCLASS wc_{};
 	RECT wrc_ = { 0,0,kClientWidth,kClientHeight };

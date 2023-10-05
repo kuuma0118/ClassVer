@@ -36,24 +36,24 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetTextureSrvHandleCPU(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 private:
-	static WinApp* winApp_;
-	static DirectXCommon* directXCommon_;
+    WinApp* winApp_;
+    DirectXCommon* directXCommon_;
 
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc_{};
 
 	ImGuiManager* imguiManager_;
 
-	ID3D12Resource* intermediateResource_[2];
+	Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource_[2];
 
 	IDxcUtils* dxcUtils_;
 	IDxcCompiler3* dxcCompiler_;
 
 	IDxcIncludeHandler* includeHandler_;
 
-	ID3DBlob* signatureBlob_;
-	ID3DBlob* errorBlob_;
+	Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob_;
+	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob_;
 
-	ID3D12RootSignature* rootSignature_;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_;
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc_{};
 	D3D12_BLEND_DESC blendDesc_{};
 
@@ -61,7 +61,7 @@ private:
 	IDxcBlob* pixelShaderBlob_;
 
 	D3D12_RASTERIZER_DESC rasterizerDesc_{};
-	ID3D12PipelineState* graphicsPipelineState_;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_;
 
 	D3D12_VIEWPORT viewPort_{};
 	D3D12_RECT scissorRect_{};
@@ -69,7 +69,7 @@ private:
 
 	Vector4 vertexData_;
 
-	ID3D12Resource* textureResource_[2];
+	Microsoft::WRL::ComPtr<ID3D12Resource> textureResource_[2];
 
 	uint32_t descriptorSizeSRV_;
 	uint32_t descriptorSizeRTV_;
@@ -97,8 +97,8 @@ private:
 
 	void SettingDepth();
 
-	ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
-	ID3D12Resource* UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages, uint32_t index);
+	Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
+	Microsoft::WRL::ComPtr<ID3D12Resource> UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages, uint32_t index);
 
 	DirectX::ScratchImage LoadTexture(const std::string& filePath);
 };

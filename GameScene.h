@@ -6,6 +6,13 @@
 #include "ImGuiManager.h"
 #include "Sprite.h"
 #include "Sphere.h"
+#include "Model.h"
+
+struct TriangleVertex {
+	Vector4 v1;
+	Vector4 v2;
+	Vector4 v3;
+};
 
 class GameScene {
 public:
@@ -21,12 +28,12 @@ private:
 
 	Sprite* sprite_[2];
 
-	Vector4 spriteLeftTop_[2];
-	Vector4 spriteRightDown_[2];
+	Vector4 spriteDataLeftTop_[2];
+	Vector4 spriteDataRightDown_[2];
 
 	Transform spriteTransform_[2];
-
 	Vector4 spriteMaterial_[2];
+
 	Sphere* sphere_;
 	Transform sphereTransform_;
 	Vector4 sphereMaterial_;
@@ -34,17 +41,22 @@ private:
 
 	Transform spriteUvTransform_;
 
-	Vector4 data1_[2];
-	Vector4 data2_[2];
-	Vector4 data3_[2];
-	Vector4 material_[2];
+	TriangleVertex triangleVertex_[2];
+	Vector4 triangleMaterial_[2];
 
 	Triangle* triangle_[2];
 	Transform transform_;
 
+	Transform modelTransform_;
+	Vector4 modelMaterial_;
+
 	Matrix4x4 worldMatrix_;
 	Transform cameraTransform_;
+
 	DirectionalLight directionalLight_;
+
 	uint32_t uvResourceNumber_;
 	int monsterBallResourceNumber_;
+
+	Model* model_;
 };

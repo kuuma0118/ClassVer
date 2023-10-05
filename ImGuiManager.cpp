@@ -9,10 +9,10 @@ void ImGuiManager::Initialize(WinApp* winApp, DirectXCommon* directXCommon) {
 	ImGui::StyleColorsDark();
 
 	ImGui_ImplWin32_Init(winApp->GetHwnd());
-	ImGui_ImplDX12_Init(directXCommon_->GetDevice(),
+	ImGui_ImplDX12_Init(directXCommon_->GetDevice().Get(),
 		directXCommon_->GetBackBufferCount(),
 		directXCommon_->GetRtvDesc().Format,
-		directXCommon_->GetSrvHeap(),
+		directXCommon_->GetSrvHeap().Get(),
 		directXCommon_->GetSrvHeap()->GetCPUDescriptorHandleForHeapStart(),
 		directXCommon_->GetSrvHeap()->GetGPUDescriptorHandleForHeapStart());
 }
@@ -28,7 +28,7 @@ void ImGuiManager::Begin() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	ID3D12DescriptorHeap* descriptorHeaps[] = { directXCommon_->GetSrvHeap() };
+	ID3D12DescriptorHeap* descriptorHeaps[] = { directXCommon_->GetSrvHeap().Get() };
 	directXCommon_->GetCommandList()->SetDescriptorHeaps(1, descriptorHeaps);
 }
 
@@ -37,5 +37,5 @@ void ImGuiManager::End() {
 }
 
 void ImGuiManager::Draw() {
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), directXCommon_->GetCommandList());
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), directXCommon_->GetCommandList().Get());
 }
