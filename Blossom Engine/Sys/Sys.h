@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Common.h"
-#include "MatrixCalculate.h"
+#include <../Blossom Engine/Common/Common.h>
+#include <../Blossom Engine/Math/MatrixCalculate.h>
 
 class ModelEngine;
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Common.h"
-#include "MatrixCalculate.h"
-#include "Engine.h"
+#include <../Blossom Engine/Common/Common.h>
+#include <../Blossom Engine/Math/MatrixCalculate.h>
+#include <../Blossom Engine/Engine/Engine.h>
 
 class Sphere {
 public:

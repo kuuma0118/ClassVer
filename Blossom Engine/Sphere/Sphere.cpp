@@ -1,6 +1,6 @@
 #include "Sphere.h"
 #include <assert.h>
-#include "Engine.h"
+#include <../Blossom Engine/Engine/Engine.h>
 
 void Sphere::Initialize(DirectXCommon* directXCommon, ModelEngine* engine, const DirectionalLight& light) {
 	directXCommon_ = directXCommon;

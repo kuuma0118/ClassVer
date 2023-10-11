@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common.h"
+#include <../Blossom Engine/Common/Common.h>
 
 class ImGuiManager {
 public:

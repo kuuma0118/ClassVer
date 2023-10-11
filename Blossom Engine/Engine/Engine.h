@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Common.h"
+#include <../Blossom Engine/Common/Common.h>
 #include <dxcapi.h>
-#include "Vector4.h"
-#include "Sys.h"
-#include "ImGuiManager.h"
+#include <../Blossom Engine/Math/Vector4.h>
+#include <../Blossom Engine/Sys/Sys.h>
+#include <../ImGui/ImGuiManager.h>
 
-#include "externals/DirectXTex/d3dx12.h"
+
+#include <../externals/DirectXTex/d3dx12.h>
 
 #pragma comment(lib,"dxcompiler.lib")
 

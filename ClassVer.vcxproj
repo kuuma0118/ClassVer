@@ -92,8 +92,17 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Common.cpp" />
-    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Blossom Engine\Common\Common.cpp" />
+    <ClCompile Include="Blossom Engine\Engine\Engine.cpp" />
+    <ClCompile Include="Blossom Engine\GameScenes\GameScene.cpp" />
+    <ClCompile Include="Blossom Engine\Math\MatrixCalculate.cpp" />
+    <ClCompile Include="Blossom Engine\Model\Model.cpp" />
+    <ClCompile Include="Blossom Engine\Sphere\Sphere.cpp" />
+    <ClCompile Include="Blossom Engine\Sprite\Sprite.cpp" />
+    <ClCompile Include="Blossom Engine\String\String.cpp" />
+    <ClCompile Include="Blossom Engine\Sys\Sys.cpp" />
+    <ClCompile Include="Blossom Engine\Transform\transform.cpp" />
+    <ClCompile Include="Blossom Engine\WinApp\WinApp.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
     <ClCompile Include="externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="externals\imgui\imgui_draw.cpp" />
@@ -101,21 +110,25 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="ImGuiManager.cpp" />
-    <ClCompile Include="MatrixCalculate.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Sphere.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="String.cpp" />
-    <ClCompile Include="Sys.cpp" />
-    <ClCompile Include="transform.cpp" />
-    <ClCompile Include="WinApp.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common.h" />
-    <ClInclude Include="Engine.h" />
+    <ClInclude Include="Blossom Engine\Common\Common.h" />
+    <ClInclude Include="Blossom Engine\Engine\Engine.h" />
+    <ClInclude Include="Blossom Engine\GameScenes\GameScene.h" />
+    <ClInclude Include="Blossom Engine\Math\Matrix3x3.h" />
+    <ClInclude Include="Blossom Engine\Math\Matrix4x4.h" />
+    <ClInclude Include="Blossom Engine\Math\MatrixCalculate.h" />
+    <ClInclude Include="Blossom Engine\Math\Vector2.h" />
+    <ClInclude Include="Blossom Engine\Math\Vector3.h" />
+    <ClInclude Include="Blossom Engine\Math\Vector4.h" />
+    <ClInclude Include="Blossom Engine\Model\Model.h" />
+    <ClInclude Include="Blossom Engine\Sphere\Sphere.h" />
+    <ClInclude Include="Blossom Engine\Sprite\Sprite.h" />
+    <ClInclude Include="Blossom Engine\String\String.h" />
+    <ClInclude Include="Blossom Engine\Sys\Sys.h" />
+    <ClInclude Include="Blossom Engine\Transform\transform.h" />
+    <ClInclude Include="Blossom Engine\WinApp\WinApp.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
     <ClInclude Include="externals\imgui\imgui.h" />
     <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
@@ -124,21 +137,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
-    <ClInclude Include="GameScene.h" />
-    <ClInclude Include="ImGuiManager.h" />
-    <ClInclude Include="Matrix3x3.h" />
-    <ClInclude Include="Matrix4x4.h" />
-    <ClInclude Include="MatrixCalculate.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Sphere.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="String.h" />
-    <ClInclude Include="Sys.h" />
-    <ClInclude Include="transform.h" />
-    <ClInclude Include="Vector2.h" />
-    <ClInclude Include="Vector3.h" />
-    <ClInclude Include="Vector4.h" />
-    <ClInclude Include="WinApp.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

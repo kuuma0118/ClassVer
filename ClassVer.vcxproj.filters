@@ -16,26 +16,74 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{13e5e8f6-7220-4ba7-ae12-50ed5470d2e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Common">
+      <UniqueIdentifier>{8129da6b-5b06-435e-96b9-82916b8109be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\EngineBase">
+      <UniqueIdentifier>{f128610d-c09d-464e-945e-63a6f5ea73b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameScene">
+      <UniqueIdentifier>{4c305805-045a-4333-8f55-8f417b603d3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Math">
+      <UniqueIdentifier>{f33ad2fd-ada9-43e2-b810-6f37871a599a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Model">
+      <UniqueIdentifier>{25908754-90e8-4aaa-83ae-3a2612ca0bd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sphere">
+      <UniqueIdentifier>{877f943f-8b88-4584-a97b-9810705ba51e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sprite">
+      <UniqueIdentifier>{6c91ccdc-1a4e-4918-b33e-174f5938a8e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\String">
+      <UniqueIdentifier>{07253e9f-3ba8-4fc6-80fd-1f75f0da8227}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sys">
+      <UniqueIdentifier>{b95d94c6-9894-4127-9016-4c68919e560e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Transform">
+      <UniqueIdentifier>{22c27804-786b-4282-96e7-38f17236ef34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\WinApp">
+      <UniqueIdentifier>{b1d5c354-6878-4b5d-af27-f86c9a83bf07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Common">
+      <UniqueIdentifier>{cad5e16b-86f1-44b2-b216-3337b9f05eb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\EngineBase">
+      <UniqueIdentifier>{ce7a6131-5d39-4fa3-a781-828bd2eb4de6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GameScene">
+      <UniqueIdentifier>{719b113d-b30f-4fa5-9b9f-0963caa03439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Math">
+      <UniqueIdentifier>{511e40d0-d50e-4699-bdb9-fc6013d6b4eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Model">
+      <UniqueIdentifier>{2cb106d1-ca71-4f4e-84c8-653b392bd145}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\WinApp">
+      <UniqueIdentifier>{ea92a52f-e33a-46d7-ae47-1c4e0d61bf35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Transform">
+      <UniqueIdentifier>{53769334-941d-4c50-9191-0aa8ac66b876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Sys">
+      <UniqueIdentifier>{65584114-3b91-4e3e-8a51-00436cc7a3f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\String">
+      <UniqueIdentifier>{d5933904-d313-4b2e-bfa0-6a0b54fbbe61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Sprite">
+      <UniqueIdentifier>{855ba931-f92c-4633-b9a2-1268d16e72c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Sphere">
+      <UniqueIdentifier>{e7d025f9-0086-46fe-a696-809113e1e5c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="WinApp.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Common.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="String.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Sys.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
@@ -57,47 +105,42 @@
     <ClCompile Include="externals\imgui\imgui_draw.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="transform.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Blossom Engine\Common\Common.cpp">
+      <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
-    <ClCompile Include="MatrixCalculate.cpp">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClCompile Include="Blossom Engine\Engine\Engine.cpp">
+      <Filter>ソース ファイル\EngineBase</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Blossom Engine\GameScenes\GameScene.cpp">
+      <Filter>ソース ファイル\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Blossom Engine\Math\MatrixCalculate.cpp">
+      <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiManager.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Blossom Engine\Model\Model.cpp">
+      <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Sphere.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Blossom Engine\Sphere\Sphere.cpp">
+      <Filter>ソース ファイル\Sphere</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Blossom Engine\Sprite\Sprite.cpp">
+      <Filter>ソース ファイル\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\String\String.cpp">
+      <Filter>ソース ファイル\String</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\WinApp\WinApp.cpp">
+      <Filter>ソース ファイル\WinApp</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\Transform\transform.cpp">
+      <Filter>ソース ファイル\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\Sys\Sys.cpp">
+      <Filter>ソース ファイル\Sys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WinApp.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Common.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="String.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Sys.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector4.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="externals\imgui\imgui_impl_dx12.h">
       <Filter>imgui</Filter>
     </ClInclude>
@@ -116,44 +159,59 @@
     <ClInclude Include="externals\imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix4x4.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="externals\imgui\imconfig.h">
       <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="externals\imgui\imgui.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="transform.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Blossom Engine\Common\Common.h">
+      <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
-    <ClInclude Include="MatrixCalculate.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Blossom Engine\Engine\Engine.h">
+      <Filter>ヘッダー ファイル\EngineBase</Filter>
     </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Blossom Engine\GameScenes\GameScene.h">
+      <Filter>ヘッダー ファイル\GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Blossom Engine\Math\Vector2.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="GameScene.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Blossom Engine\Math\Vector3.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="ImGuiManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Blossom Engine\Math\Vector4.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Blossom Engine\Math\MatrixCalculate.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Blossom Engine\Math\Matrix3x3.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix3x3.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Blossom Engine\Math\Matrix4x4.h">
+      <Filter>ヘッダー ファイル\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Blossom Engine\Model\Model.h">
+      <Filter>ヘッダー ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\Sphere\Sphere.h">
+      <Filter>ヘッダー ファイル\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\Sprite\Sprite.h">
+      <Filter>ヘッダー ファイル\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\String\String.h">
+      <Filter>ヘッダー ファイル\String</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\WinApp\WinApp.h">
+      <Filter>ヘッダー ファイル\WinApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\Transform\transform.h">
+      <Filter>ヘッダー ファイル\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\Sys\Sys.h">
+      <Filter>ヘッダー ファイル\Sys</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
-#include "Engine.h"
-#include "GameScene.h"
+#include <../Blossom Engine/Engine/Engine.h>
+#include <../Blossom Engine/GameScenes/GameScene.h>
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	CoInitializeEx(0, COINIT_MULTITHREADED);

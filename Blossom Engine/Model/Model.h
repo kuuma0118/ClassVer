@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Common.h"
-#include "Vector4.h"
-#include "Engine.h"
+#include <../Blossom Engine/Common/Common.h>
+#include <../Blossom Engine/Math/Vector4.h>
+#include <../Blossom Engine/Engine/Engine.h>
 #include <string>
 
 class Model {

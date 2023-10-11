@@ -1,6 +1,6 @@
-#include "Triangle.h"
+#include "Sys.h"
 #include <assert.h>
-#include "Engine.h"
+#include <../Blossom Engine/Engine/Engine.h>
 
 void Triangle::Initialize(DirectXCommon* directXCommon, ModelEngine* engine, const Vector4& a, const Vector4& b, const Vector4& c, const DirectionalLight& light) {
 	directXCommon_ = directXCommon;

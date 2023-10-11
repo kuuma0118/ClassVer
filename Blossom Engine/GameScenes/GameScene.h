@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Vector4.h"
-#include "Sys.h"
-#include "Engine.h"
-#include "ImGuiManager.h"
-#include "Sprite.h"
-#include "Sphere.h"
-#include "Model.h"
+#include <../Blossom Engine/Math/Vector4.h>
+#include <../Blossom Engine/Sys/Sys.h>
+#include <../Blossom Engine/Engine/Engine.h>
+#include <../ImGui/ImGuiManager.h>
+#include <../Blossom Engine/Sprite/Sprite.h>
+#include <../Blossom Engine/Sphere/Sphere.h>
+#include <../Blossom Engine/Model/Model.h>
 
 struct TriangleVertex {
 	Vector4 v1;

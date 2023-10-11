@@ -3,13 +3,11 @@
 #include <chrono>
 #include <cstdint>
 #include <dxgi1_6.h>
-
 #include <wrl.h>
+#include <../Blossom Engine/WinApp/WinApp.h>
+#include <../Blossom Engine/String/String.h>
 
-#include "WinApp.h"
-#include "String.h"
-
-#include "Externals/DirectXTex/DirectXTex.h"
+#include <../externals/DirectXTex/DirectXTex.h>
 
 class DirectXCommon {
 public:
