@@ -1,40 +1,79 @@
 #pragma once
+#include <string>
+#include <d3d12.h>
+#include <dxgi1_6.h>
+#include <dxgidebug.h>
+#pragma comment(lib,"d3d12.lib")
+#pragma comment(lib,"dxgi.lib")
+#include <dxgidebug.h>
+#pragma comment(lib, "dxguid.lib")
+#include <dxcapi.h>
+#pragma comment(lib, "dxcompiler.lib")
 
-#include <../Blossom Engine/Common/Common.h>
-#include <../Blossom Engine/Math/MatrixCalculate.h>
+#include "../Blossom Engine/Common/Common.h"
+#include "../Blossom Engine/Math/MatrixCalculate.h"
+#include "../Blossom Engine/Math/Matrix4x4.h"
+#include "../Blossom Engine/Math/Vector4.h"
+#include "../components/camera/Camera.h"
+#include "../Blossom Engine/utility/TransformationMatrix.h"
+#include <wrl.h>
 
-class ModelEngine;
+// 三角形の頂点
+struct TriangleVertices {
+	Vector4 left;
+	Vector4 top;
+	Vector4 right;
+};
 
 class Triangle
 {
 public:
-	void Initialize(DirectXCommon* directXCommon, ModelEngine* engine, const Vector4& a, const Vector4& b, const Vector4& c, const DirectionalLight& light);
+	// Getter
+	const Microsoft::WRL::ComPtr<ID3D12Resource> GetMaterialResource() { return materialResource_.Get(); }
 
-	void Draw(const Transform& transform, const Transform& cameraTransform, const Vector4& material);
+	// Setter
+	void SetTextureSrvHandleGPU(D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU) { textureSrvHandleGPU_ = textureSrvHandleGPU; }
 
-	void Finalize();
+	Triangle(Vector4 left, Vector4 top, Vector4 right);
 
-private:
-	ModelEngine* engine_;
+	~Triangle();
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
+	// Resource生成
+	const Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(size_t sizeInBytes);
 
-	DirectXCommon* directXCommon_;
+	// VertexResourceの生成
+	void CreateVertexResource();
 
-	VertexData* vertexData_;
+	// VertexBufferViewの生成
+	void CreateVertexBufferView();
+
+	// MaterialResourceの生成
+	void CreateMaterialResource();
+
+	// TransformationMatrix用のResourceを生成
+	void CreateWvpResource();
+
+	// 初期化
+	void Initialize();
+
+	// 三角形描画
+	void Draw();
+
+	void ApplyGlobalVariables();
+
+	void ImGuiAdjustParameter();
+
+public:
+	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
-
+	VertexData* vertexData_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
 	Material* materialData_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
 	TransformationMatrix* wvpData_;
-
-	DirectionalLight* directionalLight_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource_;
-
-private:
-	void SettingVertex(const Vector4& a, const Vector4& b, const Vector4& c);
-	void SetColor();
-	void TransformMatrix();
-	void CreateDirectionalLight(const DirectionalLight& light);
+	Transform transform_;
+	Transform uvTransform_;
+	Matrix4x4 uvTransformMatrix_;
+	TriangleVertices vertex_;
 };

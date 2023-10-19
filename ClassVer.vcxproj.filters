@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="リソース ファイル">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -16,71 +8,60 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{13e5e8f6-7220-4ba7-ae12-50ed5470d2e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Common">
+    <Filter Include="Blossom Engine">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Blossom Engine\Common">
       <UniqueIdentifier>{8129da6b-5b06-435e-96b9-82916b8109be}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\EngineBase">
-      <UniqueIdentifier>{f128610d-c09d-464e-945e-63a6f5ea73b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\GameScene">
+    <Filter Include="Blossom Engine\GameScene">
       <UniqueIdentifier>{4c305805-045a-4333-8f55-8f417b603d3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Math">
-      <UniqueIdentifier>{f33ad2fd-ada9-43e2-b810-6f37871a599a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Model">
+    <Filter Include="Blossom Engine\Model">
       <UniqueIdentifier>{25908754-90e8-4aaa-83ae-3a2612ca0bd9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Sphere">
+    <Filter Include="Blossom Engine\Sphere">
       <UniqueIdentifier>{877f943f-8b88-4584-a97b-9810705ba51e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Sprite">
+    <Filter Include="Blossom Engine\Sprite">
       <UniqueIdentifier>{6c91ccdc-1a4e-4918-b33e-174f5938a8e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\String">
+    <Filter Include="Blossom Engine\String">
       <UniqueIdentifier>{07253e9f-3ba8-4fc6-80fd-1f75f0da8227}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Sys">
+    <Filter Include="Blossom Engine\Sys">
       <UniqueIdentifier>{b95d94c6-9894-4127-9016-4c68919e560e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Transform">
-      <UniqueIdentifier>{22c27804-786b-4282-96e7-38f17236ef34}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\WinApp">
+    <Filter Include="Blossom Engine\WinApp">
       <UniqueIdentifier>{b1d5c354-6878-4b5d-af27-f86c9a83bf07}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Common">
-      <UniqueIdentifier>{cad5e16b-86f1-44b2-b216-3337b9f05eb2}</UniqueIdentifier>
+    <Filter Include="Blossom Engine\Manager">
+      <UniqueIdentifier>{6f87089a-149a-4154-93a4-7814a68a98dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\EngineBase">
-      <UniqueIdentifier>{ce7a6131-5d39-4fa3-a781-828bd2eb4de6}</UniqueIdentifier>
+    <Filter Include="Blossom Engine\components">
+      <UniqueIdentifier>{24dcca22-098d-4715-9691-d7aa9fd35571}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\GameScene">
-      <UniqueIdentifier>{719b113d-b30f-4fa5-9b9f-0963caa03439}</UniqueIdentifier>
+    <Filter Include="Blossom Engine\components\Audio">
+      <UniqueIdentifier>{d79a17ba-284a-4ddb-bd46-42a9e687f857}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Math">
+    <Filter Include="Blossom Engine\components\Camera">
+      <UniqueIdentifier>{49974483-67c4-48a5-b67b-fb9175ec82bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blossom Engine\components\DebugCamera">
+      <UniqueIdentifier>{da881998-2432-45e9-9241-232e539afe18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blossom Engine\components\Light">
+      <UniqueIdentifier>{425cdb2c-4164-43d3-beba-94ff5ae44684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blossom Engine\components\Input">
+      <UniqueIdentifier>{7a4f023d-2529-44c5-b1a5-4211f68e7c87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blossom Engine\Math">
       <UniqueIdentifier>{511e40d0-d50e-4699-bdb9-fc6013d6b4eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Model">
-      <UniqueIdentifier>{2cb106d1-ca71-4f4e-84c8-653b392bd145}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\WinApp">
-      <UniqueIdentifier>{ea92a52f-e33a-46d7-ae47-1c4e0d61bf35}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Transform">
-      <UniqueIdentifier>{53769334-941d-4c50-9191-0aa8ac66b876}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Sys">
-      <UniqueIdentifier>{65584114-3b91-4e3e-8a51-00436cc7a3f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\String">
-      <UniqueIdentifier>{d5933904-d313-4b2e-bfa0-6a0b54fbbe61}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Sprite">
-      <UniqueIdentifier>{855ba931-f92c-4633-b9a2-1268d16e72c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Sphere">
-      <UniqueIdentifier>{e7d025f9-0086-46fe-a696-809113e1e5c1}</UniqueIdentifier>
+    <Filter Include="Blossom Engine\utility">
+      <UniqueIdentifier>{8d1443bb-79a5-4f24-b2ae-843c1c5ebc2e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -107,37 +88,73 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Blossom Engine\Common\Common.cpp">
-      <Filter>ソース ファイル\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Blossom Engine\Engine\Engine.cpp">
-      <Filter>ソース ファイル\EngineBase</Filter>
+      <Filter>Blossom Engine\Common</Filter>
     </ClCompile>
     <ClCompile Include="Blossom Engine\GameScenes\GameScene.cpp">
-      <Filter>ソース ファイル\GameScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Blossom Engine\Math\MatrixCalculate.cpp">
-      <Filter>ソース ファイル\Math</Filter>
+      <Filter>Blossom Engine\GameScene</Filter>
     </ClCompile>
     <ClCompile Include="Blossom Engine\Model\Model.cpp">
-      <Filter>ソース ファイル\Model</Filter>
+      <Filter>Blossom Engine\Model</Filter>
     </ClCompile>
     <ClCompile Include="Blossom Engine\Sphere\Sphere.cpp">
-      <Filter>ソース ファイル\Sphere</Filter>
+      <Filter>Blossom Engine\Sphere</Filter>
     </ClCompile>
     <ClCompile Include="Blossom Engine\Sprite\Sprite.cpp">
-      <Filter>ソース ファイル\Sprite</Filter>
+      <Filter>Blossom Engine\Sprite</Filter>
     </ClCompile>
     <ClCompile Include="Blossom Engine\String\String.cpp">
-      <Filter>ソース ファイル\String</Filter>
+      <Filter>Blossom Engine\String</Filter>
     </ClCompile>
     <ClCompile Include="Blossom Engine\WinApp\WinApp.cpp">
-      <Filter>ソース ファイル\WinApp</Filter>
-    </ClCompile>
-    <ClCompile Include="Blossom Engine\Transform\transform.cpp">
-      <Filter>ソース ファイル\Transform</Filter>
+      <Filter>Blossom Engine\WinApp</Filter>
     </ClCompile>
     <ClCompile Include="Blossom Engine\Sys\Sys.cpp">
-      <Filter>ソース ファイル\Sys</Filter>
+      <Filter>Blossom Engine\Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\ImGuiManager.cpp">
+      <Filter>Blossom Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\GameScenes\TitleScene.cpp">
+      <Filter>Blossom Engine\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\GameManager.cpp">
+      <Filter>Blossom Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\TextureManager.cpp">
+      <Filter>Blossom Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\Pipelinemanager.cpp">
+      <Filter>Blossom Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\ObjManager.cpp">
+      <Filter>Blossom Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\components\Audio\Audio.cpp">
+      <Filter>Blossom Engine\components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\components\camera\Camera.cpp">
+      <Filter>Blossom Engine\components\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\components\camera\DebugCamera.cpp">
+      <Filter>Blossom Engine\components\DebugCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\components\light\Light.cpp">
+      <Filter>Blossom Engine\components\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\components\Input\Input.cpp">
+      <Filter>Blossom Engine\components\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\Math\MatrixCalculate.cpp">
+      <Filter>Blossom Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\utility\MaterialData.cpp">
+      <Filter>Blossom Engine\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\utility\GlobalVariables.cpp">
+      <Filter>Blossom Engine\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Blossom Engine\GameScenes\IScene.cpp">
+      <Filter>Blossom Engine\GameScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -165,53 +182,104 @@
     <ClInclude Include="externals\imgui\imgui.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Blossom Engine\Common\Common.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Blossom Engine\Engine\Engine.h">
-      <Filter>ヘッダー ファイル\EngineBase</Filter>
-    </ClInclude>
-    <ClInclude Include="Blossom Engine\GameScenes\GameScene.h">
-      <Filter>ヘッダー ファイル\GameScene</Filter>
-    </ClInclude>
     <ClInclude Include="Blossom Engine\Math\Vector2.h">
-      <Filter>ヘッダー ファイル\Math</Filter>
+      <Filter>Blossom Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Blossom Engine\Math\Vector3.h">
-      <Filter>ヘッダー ファイル\Math</Filter>
+      <Filter>Blossom Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Blossom Engine\Math\Vector4.h">
-      <Filter>ヘッダー ファイル\Math</Filter>
+      <Filter>Blossom Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Blossom Engine\Math\MatrixCalculate.h">
-      <Filter>ヘッダー ファイル\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Blossom Engine\Math\Matrix3x3.h">
-      <Filter>ヘッダー ファイル\Math</Filter>
+      <Filter>Blossom Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Blossom Engine\Math\Matrix4x4.h">
-      <Filter>ヘッダー ファイル\Math</Filter>
+      <Filter>Blossom Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\utility\transform.h">
+      <Filter>Blossom Engine\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\utility\VertexDate.h">
+      <Filter>Blossom Engine\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\utility\MaterialData.h">
+      <Filter>Blossom Engine\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\utility\resource.h">
+      <Filter>Blossom Engine\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\utility\TransformationMatrix.h">
+      <Filter>Blossom Engine\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\components\Audio\Audio.h">
+      <Filter>Blossom Engine\components\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\components\camera\Camera.h">
+      <Filter>Blossom Engine\components\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\components\camera\DebugCamera.h">
+      <Filter>Blossom Engine\components\DebugCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\components\light\Light.h">
+      <Filter>Blossom Engine\components\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\components\light\DirectionalLight.h">
+      <Filter>Blossom Engine\components\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\components\Input\Input.h">
+      <Filter>Blossom Engine\components\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\Common\Common.h">
+      <Filter>Blossom Engine\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\GameScenes\GameScene.h">
+      <Filter>Blossom Engine\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\GameScenes\IScene.h">
+      <Filter>Blossom Engine\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\GameScenes\TitleScene.h">
+      <Filter>Blossom Engine\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\GameManager.h">
+      <Filter>Blossom Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\ImGuiManager.h">
+      <Filter>Blossom Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\ObjManager.h">
+      <Filter>Blossom Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\PipelineManager.h">
+      <Filter>Blossom Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\TextureManager.h">
+      <Filter>Blossom Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\Math\Matrix3x3.h">
+      <Filter>Blossom Engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="Blossom Engine\Model\Model.h">
-      <Filter>ヘッダー ファイル\Model</Filter>
+      <Filter>Blossom Engine\Model</Filter>
     </ClInclude>
     <ClInclude Include="Blossom Engine\Sphere\Sphere.h">
-      <Filter>ヘッダー ファイル\Sphere</Filter>
+      <Filter>Blossom Engine\Sphere</Filter>
     </ClInclude>
     <ClInclude Include="Blossom Engine\Sprite\Sprite.h">
-      <Filter>ヘッダー ファイル\Sprite</Filter>
+      <Filter>Blossom Engine\Sprite</Filter>
     </ClInclude>
     <ClInclude Include="Blossom Engine\String\String.h">
-      <Filter>ヘッダー ファイル\String</Filter>
-    </ClInclude>
-    <ClInclude Include="Blossom Engine\WinApp\WinApp.h">
-      <Filter>ヘッダー ファイル\WinApp</Filter>
-    </ClInclude>
-    <ClInclude Include="Blossom Engine\Transform\transform.h">
-      <Filter>ヘッダー ファイル\Transform</Filter>
+      <Filter>Blossom Engine\String</Filter>
     </ClInclude>
     <ClInclude Include="Blossom Engine\Sys\Sys.h">
-      <Filter>ヘッダー ファイル\Sys</Filter>
+      <Filter>Blossom Engine\Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\WinApp\WinApp.h">
+      <Filter>Blossom Engine\WinApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\utility\GlobalVariables.h">
+      <Filter>Blossom Engine\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

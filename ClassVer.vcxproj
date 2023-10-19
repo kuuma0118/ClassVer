@@ -93,15 +93,22 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Blossom Engine\Common\Common.cpp" />
-    <ClCompile Include="Blossom Engine\Engine\Engine.cpp" />
+    <ClCompile Include="Blossom Engine\components\Audio\Audio.cpp" />
+    <ClCompile Include="Blossom Engine\components\camera\Camera.cpp" />
+    <ClCompile Include="Blossom Engine\components\camera\DebugCamera.cpp" />
+    <ClCompile Include="Blossom Engine\components\Input\Input.cpp" />
+    <ClCompile Include="Blossom Engine\components\light\Light.cpp" />
     <ClCompile Include="Blossom Engine\GameScenes\GameScene.cpp" />
+    <ClCompile Include="Blossom Engine\GameScenes\IScene.cpp" />
+    <ClCompile Include="Blossom Engine\GameScenes\TitleScene.cpp" />
     <ClCompile Include="Blossom Engine\Math\MatrixCalculate.cpp" />
     <ClCompile Include="Blossom Engine\Model\Model.cpp" />
     <ClCompile Include="Blossom Engine\Sphere\Sphere.cpp" />
     <ClCompile Include="Blossom Engine\Sprite\Sprite.cpp" />
     <ClCompile Include="Blossom Engine\String\String.cpp" />
     <ClCompile Include="Blossom Engine\Sys\Sys.cpp" />
-    <ClCompile Include="Blossom Engine\Transform\transform.cpp" />
+    <ClCompile Include="Blossom Engine\utility\GlobalVariables.cpp" />
+    <ClCompile Include="Blossom Engine\utility\MaterialData.cpp" />
     <ClCompile Include="Blossom Engine\WinApp\WinApp.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
     <ClCompile Include="externals\imgui\imgui_demo.cpp" />
@@ -110,12 +117,24 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="ImGui\ImGuiManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Manager\GameManager.cpp" />
+    <ClCompile Include="Manager\ObjManager.cpp" />
+    <ClCompile Include="Manager\Pipelinemanager.cpp" />
+    <ClCompile Include="Manager\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blossom Engine\Common\Common.h" />
-    <ClInclude Include="Blossom Engine\Engine\Engine.h" />
+    <ClInclude Include="Blossom Engine\components\Audio\Audio.h" />
+    <ClInclude Include="Blossom Engine\components\camera\Camera.h" />
+    <ClInclude Include="Blossom Engine\components\camera\DebugCamera.h" />
+    <ClInclude Include="Blossom Engine\components\Input\Input.h" />
+    <ClInclude Include="Blossom Engine\components\light\DirectionalLight.h" />
+    <ClInclude Include="Blossom Engine\components\light\Light.h" />
     <ClInclude Include="Blossom Engine\GameScenes\GameScene.h" />
+    <ClInclude Include="Blossom Engine\GameScenes\IScene.h" />
+    <ClInclude Include="Blossom Engine\GameScenes\TitleScene.h" />
     <ClInclude Include="Blossom Engine\Math\Matrix3x3.h" />
     <ClInclude Include="Blossom Engine\Math\Matrix4x4.h" />
     <ClInclude Include="Blossom Engine\Math\MatrixCalculate.h" />
@@ -127,7 +146,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Blossom Engine\Sprite\Sprite.h" />
     <ClInclude Include="Blossom Engine\String\String.h" />
     <ClInclude Include="Blossom Engine\Sys\Sys.h" />
-    <ClInclude Include="Blossom Engine\Transform\transform.h" />
+    <ClInclude Include="Blossom Engine\utility\GlobalVariables.h" />
+    <ClInclude Include="Blossom Engine\utility\MaterialData.h" />
+    <ClInclude Include="Blossom Engine\utility\resource.h" />
+    <ClInclude Include="Blossom Engine\utility\transform.h" />
+    <ClInclude Include="Blossom Engine\utility\TransformationMatrix.h" />
+    <ClInclude Include="Blossom Engine\utility\VertexDate.h" />
     <ClInclude Include="Blossom Engine\WinApp\WinApp.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
     <ClInclude Include="externals\imgui\imgui.h" />
@@ -137,6 +161,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="ImGui\ImGuiManager.h" />
+    <ClInclude Include="Manager\GameManager.h" />
+    <ClInclude Include="Manager\ObjManager.h" />
+    <ClInclude Include="Manager\PipelineManager.h" />
+    <ClInclude Include="Manager\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -1,62 +1,36 @@
 #pragma once
 
-#include <../Blossom Engine/Math/Vector4.h>
-#include <../Blossom Engine/Sys/Sys.h>
-#include <../Blossom Engine/Engine/Engine.h>
-#include <../ImGui/ImGuiManager.h>
-#include <../Blossom Engine/Sprite/Sprite.h>
-#include <../Blossom Engine/Sphere/Sphere.h>
-#include <../Blossom Engine/Model/Model.h>
+#include "IScene.h"
 
-struct TriangleVertex {
-	Vector4 v1;
-	Vector4 v2;
-	Vector4 v3;
-};
+#include "../Blossom Engine/Math/Vector4.h"
+#include "../Blossom Engine/Sys/Sys.h"
+#include "../Blossom Engine/Engine/Engine.h"
+#include "../ImGui/ImGuiManager.h"
+#include "../Blossom Engine/Sprite/Sprite.h"
+#include "../Blossom Engine/Sphere/Sphere.h"
+#include "../Blossom Engine/Model/Model.h"
 
-class GameScene {
+class GameManager;
+class GameScene : public IScene
+{
 public:
-	void Initialize(ModelEngine* engine, DirectXCommon* directXCommon);
-	void Update();
-	void Draw2D();
-	void Draw3D();
-	void Finalize();
+	// 初期化
+	void Initialize()override;
 
+	// 更新処理
+	void Update()override;
+
+	// 描画
+	void Draw()override;
+
+	void Finalize()override;
 private:
-	ModelEngine* engine_;
-	DirectXCommon* directXCommon_;
+	// カメラのポインタ
+	DebugCamera* camera_ = nullptr;
 
-	Sprite* sprite_[2];
+	//// マップデータ
+	//Map* map_ = nullptr;
 
-	Vector4 spriteDataLeftTop_[2];
-	Vector4 spriteDataRightDown_[2];
-
-	Transform spriteTransform_[2];
-	Vector4 spriteMaterial_[2];
-
-	Sphere* sphere_;
-	Transform sphereTransform_;
-	Vector4 sphereMaterial_;
-	Matrix4x4 sphereMatrix_;
-
-	Transform spriteUvTransform_;
-
-	TriangleVertex triangleVertex_[2];
-	Vector4 triangleMaterial_[2];
-
-	Triangle* triangle_[2];
-	Transform transform_;
-
-	Transform modelTransform_;
-	Vector4 modelMaterial_;
-
-	Matrix4x4 worldMatrix_;
-	Transform cameraTransform_;
-
-	DirectionalLight directionalLight_;
-
-	uint32_t uvResourceNumber_;
-	int monsterBallResourceNumber_;
-
-	Model* model_;
+	// デバッグ用の変数
+	int loadStageNum_ = 0;	// 読み込むステージの番号
 };

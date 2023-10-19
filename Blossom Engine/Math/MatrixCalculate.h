@@ -7,6 +7,8 @@
 #include "Vector2.h"
 #include <stdint.h>
 
+#include "../Blossom Engine/utility/VertexDate.h"
+#include "../Blossom Engine/utility/MaterialData.h"
 #include <vector>
 #include <string>
 

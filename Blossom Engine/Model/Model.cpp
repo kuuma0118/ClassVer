@@ -1,187 +1,116 @@
 #include "Model.h"
-#include <fstream>
-#include <sstream>
 
-void Model::Initialize(DirectXCommon* directXCommon, ModelEngine* engine, const std::string& directoryPath, const std::string& fileName, uint32_t index, const DirectionalLight& light) {
-	directXCommon_ = directXCommon;
-	engine_ = engine;
+Microsoft::WRL::ComPtr<ID3D12Resource> Model::CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes) {
+	HRESULT hr;
 
-	modelData_ = LoadObjFile(directoryPath, fileName);
-	engine_->LoadTexture(modelData_.material.textureFilePath, index);
+	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
+	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD; 
 
-	CreateVertexData();
-	SetColor();
-	TransformMatrix();
-	CreateDirectionalLight(light);
+	D3D12_RESOURCE_DESC vertexResourceDesc{};
+
+	vertexResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	vertexResourceDesc.Width = sizeInBytes; 
+	
+	vertexResourceDesc.Height = 1;
+	vertexResourceDesc.DepthOrArraySize = 1;
+	vertexResourceDesc.MipLevels = 1;
+	vertexResourceDesc.SampleDesc.Count = 1;
+
+	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
+
+	hr = device.Get()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
+		&vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
+	assert(SUCCEEDED(hr));
+
+	return vertexResource;
 }
 
-void Model::Draw(const Vector4& material, const Transform& transform, uint32_t texIndex, const Transform& cameraTransform) {
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
-	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(directXCommon_->GetWin()->kClientWidth) / float(directXCommon_->GetWin()->kClientHeight), 0.1f, 100.0f);
-
-	Matrix4x4 wvpMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
-
-	Transform uvTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
-
-	Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
-	uvTransformMatrix = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
-	uvTransformMatrix = Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
-
-	*material_ = { material,false };
-	material_->uvTransform = uvTransformMatrix;
-
-	*wvpData_ = { wvpMatrix,worldMatrix };
-
-	directXCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
-
-	directXCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
-	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-
-	directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, engine_->textureSrvHandleGPU_[texIndex]);
-	directXCommon_->GetCommandList()->DrawInstanced(UINT(modelData_.verticles.size()), 1, 0, 0);
+void Model::CreateVertexResource() {
+	vertexResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(VertexData) * modelDate_.verticles.size()).Get();
 }
 
-void Model::Finalize() {
+void Model::CreateVertexBufferView() {
 
+	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+	
+	vertexBufferView_.SizeInBytes = sizeof(VertexData) * UINT(modelDate_.verticles.size());
+	
+	vertexBufferView_.StrideInBytes = sizeof(VertexData);
 }
 
-ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string& fileName) {
-	ModelData modelData;
-	std::vector<Vector4> positions;
-	std::vector<Vector3> normals;
-	std::vector<Vector2> texcoords;
-	std::string line;
+void Model::CreateMaterialResource() {
+	materialResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Material)).Get();
 
-	std::ifstream file(directoryPath + "/" + fileName);
+	materialData_ = nullptr;
 
-	assert(file.is_open());
-
-	while (std::getline(file, line)) {
-		std::string identifier;
-		std::istringstream s(line);
-		s >> identifier;
-
-		if (identifier == "v") {
-			Vector4 position;
-			s >> position.x >> position.y >> position.z;
-
-			position.z *= -1.0f;
-			position.w = 1.0f;
-			positions.push_back(position);
-		}
-		else if (identifier == "vt") {
-			Vector2 texcoord;
-			s >> texcoord.x >> texcoord.y;
-
-			texcoord.y = 1.0f - texcoord.y;
-			texcoords.push_back(texcoord);
-		}
-		else if (identifier == "vn") {
-			Vector3 normal;
-			s >> normal.x >> normal.y >> normal.z;
-
-			normal.z *= -1.0f;
-			normals.push_back(normal);
-		}
-		else if (identifier == "f") {
-			VertexData triangle[3];
-
-			for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex) {
-				std::string vertexDefinition;
-				s >> vertexDefinition;
-
-				std::istringstream v(vertexDefinition);
-				uint32_t elementIndeices[3];
-
-				for (int32_t element = 0; element < 3; ++element) {
-					std::string index;
-					std::getline(v, index, '/');
-
-					elementIndeices[element] = std::stoi(index);
-				}
-
-				Vector4 position = positions[elementIndeices[0] - 1];
-				Vector2 texcoord = texcoords[elementIndeices[1] - 1];
-				Vector3 normal = normals[elementIndeices[2] - 1];
-
-				VertexData vertex = { position,texcoord,normal };
-				modelData.verticles.push_back(vertex);
-				triangle[faceVertex] = { position,texcoord,normal };
-			}
-
-			modelData.verticles.push_back(triangle[2]);
-			modelData.verticles.push_back(triangle[1]);
-			modelData.verticles.push_back(triangle[0]);
-		}
-		else if (identifier == "mtllib") {
-			std::string materialFileName;
-			s >> materialFileName;
-
-			modelData.material = LoadMaterialTemplateFile(directoryPath, materialFileName);
-		}
-	}
-
-	return modelData;
+	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 }
 
-MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& fileName) {
-	MaterialData materialData;
+void Model::CreateWvpResource() {
+	
+	transformationMatrixResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(TransformationMatrix)).Get();
 
-	std::string line;
-	std::ifstream file(directoryPath + "/" + fileName);
-
-	assert(file.is_open());
-
-	while (std::getline(file, line)) {
-		std::string identifier;
-		std::istringstream s(line);
-
-		s >> identifier;
-
-		if (identifier == "map_Kd") {
-			std::string textureFileName;
-			s >> textureFileName;
-
-			materialData.textureFilePath = directoryPath + "/" + textureFileName;
-		}
-	}
-
-	return materialData;
+	transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
+	
+	transformationMatrixData_->WVP = MakeIdentity4x4();
 }
 
-void Model::CreateVertexData() {
-	vertexResource = directXCommon_->CreateBufferResource(directXCommon_->GetDevice().Get(), sizeof(VertexData) * modelData_.verticles.size());
+void Model::Initialize() {
+	
+	modelDate_ = ObjManager::GetInstance()->GetObjModelData()[block];
 
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	vertexBufferView.SizeInBytes = sizeof(VertexData) * (UINT)modelData_.verticles.size();
-	vertexBufferView.StrideInBytes = sizeof(VertexData);
+	CreateVertexResource();
 
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+	CreateMaterialResource();
 
-	std::memcpy(vertexData_, modelData_.verticles.data(), sizeof(VertexData) * modelData_.verticles.size());
+	CreateWvpResource();
+
+	CreateVertexBufferView();
+
+	
+	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+	std::memcpy(vertexData_, modelDate_.verticles.data(), sizeof(VertexData) * modelDate_.verticles.size());
+
+	transform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	uvTransform_ = {
+		{1.0f,1.0f,1.0f},
+		{0.0f,0.0f,0.0f},
+		{0.0f,0.0f,0.0f}
+	};
+
+
+	materialData_->enableLightning = false;
+
+	materialData_->uvTransform = MakeIdentity4x4();
 }
 
-void Model::SetColor() {
-	materialResource_ = DirectXCommon::CreateBufferResource(directXCommon_->GetDevice().Get(), sizeof(Material));
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&material_));
+void Model::Draw() {
+	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
+	materialData_->uvTransform = uvTransformMatrix_;
 
-	material_->uvTransform = MakeIdentity4x4();
-}
+	transformationMatrixData_->World = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 
-void Model::TransformMatrix() {
-	wvpResource_ = DirectXCommon::CreateBufferResource(directXCommon_->GetDevice().Get(), sizeof(TransformationMatrix));
-	wvpResource_->Map(0, NULL, reinterpret_cast<void**>(&wvpData_));
+	transformationMatrixData_->WVP = Multiply(transformationMatrixData_->World, *Camera::GetInstance()->GetTransformationMatrixData());
+	transformationMatrixData_->World = MakeIdentity4x4();
 
-	wvpData_->WVP = MakeIdentity4x4();
-}
+	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
 
-void Model::CreateDirectionalLight(const DirectionalLight& light) {
-	directionalLightResource_ = DirectXCommon::CreateBufferResource(directXCommon_->GetDevice().Get(), sizeof(DirectionalLight));
-	directionalLightResource_->Map(0, NULL, reinterpret_cast<void**>(&directionalLight_));
 
-	*directionalLight_ = light;
+	DirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); 
+
+	DirectXCommon::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureNum]);
+
+
+	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_.Get()->GetGPUVirtualAddress());
+
+	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::GetInstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
+
+	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
+	DirectXCommon::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelDate_.verticles.size()), 1, 0, 0);
 }

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <../Blossom Engine/Common/Common.h>
+#include "../Blossom Engine/Common/Common.h"
 #include <dxcapi.h>
-#include <../Blossom Engine/Math/Vector4.h>
-#include <../Blossom Engine/Sys/Sys.h>
-#include <../ImGui/ImGuiManager.h>
+#include "../Blossom Engine/Math/Vector4.h"
+#include "../Blossom Engine/Sys/Sys.h"
+#include "../ImGui/ImGuiManager.h"
 
 
 #include <../externals/DirectXTex/d3dx12.h>

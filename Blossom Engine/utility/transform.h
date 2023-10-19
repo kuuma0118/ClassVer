@@ -1,6 +1,6 @@
 #pragma once
 
-#include <../Blossom Engine/Math/Vector3.h>
+#include "../Blossom Engine/Math/Vector3.h"
 
 struct Transform {
 	Vector3 scale;
