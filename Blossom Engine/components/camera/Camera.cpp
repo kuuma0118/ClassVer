@@ -2,7 +2,8 @@
 #include "../Blossom Engine/WinApp/WinApp.h"
 #include "../ImGui/ImGuiManager.h"
 #include "../Blossom Engine/Math/Matrix4x4.h"
-#include "../camera/DebugCamera.h"
+//#include "../camera/DebugCamera.h"
+#include "DebugCamera.h"
 
 Camera* Camera::GetInstance() {
 	static Camera instance;

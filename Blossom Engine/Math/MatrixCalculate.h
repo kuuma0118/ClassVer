@@ -7,10 +7,11 @@
 #include "Vector2.h"
 #include <stdint.h>
 
-#include "../Blossom Engine/utility/VertexDate.h"
 #include "../Blossom Engine/utility/MaterialData.h"
 #include <vector>
 #include <string>
+#include <fstream>
+#include <sstream>
 
 struct Transform {
 	Vector3 scale;
@@ -42,9 +43,9 @@ struct DirectionalLight {
 	float intensity;
 };
 
-struct MaterialData {
-	std::string textureFilePath;
-};
+//struct MaterialData {
+//	std::string textureFilePath;
+//};
 
 struct ModelData {
 	std::vector<VertexData> verticles;

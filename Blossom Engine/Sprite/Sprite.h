@@ -2,8 +2,6 @@
 
 #include "../Blossom Engine/Common/Common.h"
 #include "../Blossom Engine/Math/Vector4.h"
-#include "../Blossom Engine/utility/VertexDate.h"
-#include "../Blossom Engine/utility/TransformationMatrix.h"
 #include "../Blossom Engine/Math/MatrixCalculate.h"
 #include <d3d12.h>
 #include <wrl.h>

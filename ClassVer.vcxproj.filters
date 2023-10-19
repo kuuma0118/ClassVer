@@ -54,14 +54,14 @@
     <Filter Include="Blossom Engine\components\Light">
       <UniqueIdentifier>{425cdb2c-4164-43d3-beba-94ff5ae44684}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Blossom Engine\components\Input">
-      <UniqueIdentifier>{7a4f023d-2529-44c5-b1a5-4211f68e7c87}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Blossom Engine\Math">
       <UniqueIdentifier>{511e40d0-d50e-4699-bdb9-fc6013d6b4eb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Blossom Engine\utility">
       <UniqueIdentifier>{8d1443bb-79a5-4f24-b2ae-843c1c5ebc2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blossom Engine\components\Input">
+      <UniqueIdentifier>{43c568bc-e356-451d-be35-4d7cf472adb5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -141,9 +141,6 @@
     <ClCompile Include="Blossom Engine\components\light\Light.cpp">
       <Filter>Blossom Engine\components\Light</Filter>
     </ClCompile>
-    <ClCompile Include="Blossom Engine\components\Input\Input.cpp">
-      <Filter>Blossom Engine\components\Input</Filter>
-    </ClCompile>
     <ClCompile Include="Blossom Engine\Math\MatrixCalculate.cpp">
       <Filter>Blossom Engine\Math</Filter>
     </ClCompile>
@@ -155,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="Blossom Engine\GameScenes\IScene.cpp">
       <Filter>Blossom Engine\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Input.cpp">
+      <Filter>Blossom Engine\components\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -197,19 +197,10 @@
     <ClInclude Include="Blossom Engine\Math\Matrix4x4.h">
       <Filter>Blossom Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Blossom Engine\utility\transform.h">
-      <Filter>Blossom Engine\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Blossom Engine\utility\VertexDate.h">
-      <Filter>Blossom Engine\utility</Filter>
-    </ClInclude>
     <ClInclude Include="Blossom Engine\utility\MaterialData.h">
       <Filter>Blossom Engine\utility</Filter>
     </ClInclude>
     <ClInclude Include="Blossom Engine\utility\resource.h">
-      <Filter>Blossom Engine\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Blossom Engine\utility\TransformationMatrix.h">
       <Filter>Blossom Engine\utility</Filter>
     </ClInclude>
     <ClInclude Include="Blossom Engine\components\Audio\Audio.h">
@@ -223,12 +214,6 @@
     </ClInclude>
     <ClInclude Include="Blossom Engine\components\light\Light.h">
       <Filter>Blossom Engine\components\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Blossom Engine\components\light\DirectionalLight.h">
-      <Filter>Blossom Engine\components\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Blossom Engine\components\Input\Input.h">
-      <Filter>Blossom Engine\components\Input</Filter>
     </ClInclude>
     <ClInclude Include="Blossom Engine\Common\Common.h">
       <Filter>Blossom Engine\Common</Filter>
@@ -280,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="Blossom Engine\utility\GlobalVariables.h">
       <Filter>Blossom Engine\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Input.h">
+      <Filter>Blossom Engine\components\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

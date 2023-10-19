@@ -15,7 +15,6 @@
 #include "../Blossom Engine/Math/Matrix4x4.h"
 #include "../Blossom Engine/Math/Vector4.h"
 #include "../components/camera/Camera.h"
-#include "../Blossom Engine/utility/TransformationMatrix.h"
 #include <wrl.h>
 
 // 三角形の頂点

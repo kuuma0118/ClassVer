@@ -1,8 +1,5 @@
 #pragma once
 #include "../Blossom Engine/Math/Matrix4x4.h"
-#include "../Blossom Engine/utility/VertexDate.h"
-#include "../Blossom Engine/utility/transform.h"
-#include "../Blossom Engine/utility/TransformationMatrix.h"
 #include "../Blossom Engine/Math/MatrixCalculate.h"
 #include <d3d12.h>
 #include "../Manager/TextureManager.h"

@@ -69,7 +69,7 @@ void GameManager::Initialize() {
 	//mapManager->SetCurrentMap(0);
 
 	//初期シーンの設定
-	sceneNum_ = GAME_SCENE;
+	sceneNum_ = TITLE_SCENE;
 	// シーンごとの初期化
 	sceneArr_[sceneNum_]->Initialize();
 }

@@ -4,7 +4,7 @@
 void GameScene::Initialize() {
 	camera_ = DebugCamera::GetInstance();
 	camera_->Initialize();
-	camera_->SetRotationCenterPosition();
+	//camera_->SetRotationCenterPosition();
 
 	sceneNum = GAME_SCENE;
 

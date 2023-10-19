@@ -1,40 +1,8 @@
-#include <../Blossom Engine/Engine/Engine.h>
-#include <../Blossom Engine/GameScenes/GameScene.h>
+#include "Manager/GameManager.h"
 
+// Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-	CoInitializeEx(0, COINIT_MULTITHREADED);
-
-	WinApp* winApp_ = nullptr;
-	ModelEngine* engine = new ModelEngine;
-
-	engine->Initialize(winApp_, 1280, 720);
-
-	GameScene* gameScene = new GameScene;
-	gameScene->Initialize(engine, engine->GetDirectXCommon());
-
-	while (true) {
-		if (winApp_->ProcessMessage()) {
-			break;
-		}
-
-		engine->BeginFrame();
-
-		gameScene->Update();
-
-		gameScene->Draw3D();
-
-		gameScene->Draw2D();
-
-
-		engine->Draw();
-
-		engine->EndFrame();
-	}
-
-	gameScene->Finalize();
-	engine->Finalize();
-
-	CoUninitialize();
-
+	std::unique_ptr<GameManager> gameManager = std::make_unique<GameManager>();
+	gameManager->Run();
 	return 0;
 }

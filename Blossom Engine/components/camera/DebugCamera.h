@@ -11,7 +11,7 @@ public:
 
 	void Update();
 
-	void SetRotationCenterPosition();
+	//void SetRotationCenterPosition();
 
 	Matrix4x4 GetViewMatrix() { return viewMatrix_; }
 

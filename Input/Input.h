@@ -4,8 +4,7 @@
 #include <dinput.h>
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
-//#include "../Blossom Engine/WinApp/WinApp.h"
-#include "../../WinApp/WinApp.h"
+#include "../Blossom Engine/WinApp/WinApp.h"
 #include <array>
 #include <windows.h>
 #include <Xinput.h>
@@ -44,6 +43,7 @@ public:
 
 	// デッドゾーンを適用する関数
 	SHORT ApplyDeadzone(SHORT inputValue);
+
 
 private:
 	/// 

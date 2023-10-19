@@ -5,11 +5,7 @@
 
 #include "../Blossom Engine/Math/MatrixCalculate.h"
 #include "../Blossom Engine/Math/Matrix4x4.h"
-#include "../Blossom Engine/utility/VertexDate.h"
-#include "../Blossom Engine/utility/transform.h"
 #include <d3d12.h>
-#include "../Blossom Engine/utility/TransformationMatrix.h"
-#include "../Blossom Engine/components/light/DirectionalLight.h"
 #include "../Blossom Engine/components/light/Light.h"
 #include "../Blossom Engine/utility/MaterialData.h"
 #include <wrl.h>

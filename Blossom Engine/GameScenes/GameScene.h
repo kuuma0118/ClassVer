@@ -2,13 +2,8 @@
 
 #include "IScene.h"
 
-#include "../Blossom Engine/Math/Vector4.h"
-#include "../Blossom Engine/Sys/Sys.h"
-#include "../Blossom Engine/Engine/Engine.h"
-#include "../ImGui/ImGuiManager.h"
-#include "../Blossom Engine/Sprite/Sprite.h"
-#include "../Blossom Engine/Sphere/Sphere.h"
-#include "../Blossom Engine/Model/Model.h"
+//#include "../components/camera/DebugCamera.h"
+#include "../Blossom Engine/components/camera/DebugCamera.h"
 
 class GameManager;
 class GameScene : public IScene
