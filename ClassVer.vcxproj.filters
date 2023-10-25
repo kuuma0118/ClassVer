@@ -269,6 +269,12 @@
     <ClInclude Include="Input\Input.h">
       <Filter>Blossom Engine\components\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Blossom Engine\utility\Transformh.h">
+      <Filter>Blossom Engine\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Blossom Engine\utility\TransformationMatrix.h">
+      <Filter>Blossom Engine\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
